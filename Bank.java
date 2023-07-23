@@ -115,7 +115,7 @@ public class Bank {
         String password = scan.nextLine();
         System.out.print("Phone Number: ");
         String phoneNumber = scan.nextLine();
-        boolean loop = true;      
+        // boolean loop = true;      
         // while (loop) {
         //     System.out.print("Checking (c) or Savings (s)? : ");
         //     char choice = scan.next().charAt(0);
