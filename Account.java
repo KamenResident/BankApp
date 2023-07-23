@@ -2,13 +2,17 @@ public class Account {
 
     private String firstName;
     private String lastName;
+    private String username;
+    private String password;
     private double balance;
     private String phoneNumber;
     private int id;
 
-    public Account(String firstName, String lastName, String phoneNumber, int id) {
+    public Account(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.username = username;
+        this.password = password;
         this.phoneNumber = phoneNumber;
         this.balance = 0.0;
         this.id = id;
@@ -20,6 +24,14 @@ public class Account {
 
     public String getLastName() {
         return this.lastName;
+    }
+
+    public String getUsername() {
+        return this.username;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 
     public double getBalance() {
@@ -48,5 +60,4 @@ public class Account {
         System.out.println("Withdrew " + withdrawalAmount);
     }
 
-    
 }
