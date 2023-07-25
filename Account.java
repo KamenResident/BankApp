@@ -1,12 +1,20 @@
 public class Account {
 
     private String firstName;
+
     private String lastName;
+
     private String username;
+
     private String password;
+
     private double balance;
+
     private String phoneNumber;
+
     private int id;
+
+    private double annualInterestRate;
 
     public Account(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
         this.firstName = firstName;
@@ -14,8 +22,9 @@ public class Account {
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.balance = 0.0;
+        this.balance = 0;
         this.id = id;
+        annualInterestRate = 0;
     }
 
     public String getFirstName() {
@@ -34,28 +43,52 @@ public class Account {
         return this.password;
     }
 
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
+    }
+
     public double getBalance() {
         return this.balance;
-    }
-
-    public String getPhoneNumber() {
-        return this.phoneNumber;
-    }
-
-    public int getID() {
-        return this.id;
     }
 
     public void setBalance(double newBalance) {
         this.balance = newBalance;
     }
 
-    public void depositMoney(double depositAmount) {
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public int getId() {
+        return this.id;
+    }
+
+    public void setId(int newId) {
+        this.id = newId;
+    }
+
+    public double getAnnualInterestRate() {
+        return annualInterestRate;
+    }
+
+    public void setAnnualInterestRate(double newRate) {
+        annualInterestRate = newRate;
+    }
+
+    public double getMonthlyInterestRate() {
+        return annualInterestRate / 12;
+    }
+
+    public double getMonthlyInterest() {
+        return balance * (getMonthlyInterestRate() / 100);
+    }
+
+    public void deposit(double depositAmount) {
         this.balance += depositAmount;
         System.out.println("Deposited " + depositAmount);
     }
 
-    public void withdrawMoney(double withdrawalAmount) {
+    public void withdraw(double withdrawalAmount) {
         this.balance -= withdrawalAmount;
         System.out.println("Withdrew " + withdrawalAmount);
     }
