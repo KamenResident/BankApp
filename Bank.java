@@ -115,19 +115,23 @@ public class Bank {
         String password = scan.nextLine();
         System.out.print("Phone Number: ");
         String phoneNumber = scan.nextLine();
-        // boolean loop = true;      
-        // while (loop) {
-        //     System.out.print("Checking (c) or Savings (s)? : ");
-        //     char choice = scan.next().charAt(0);
-        //     if (choice == 'c') {
-        //         loop = false;
-        //     } else if (choice == 's') {
-        //         loop = false;
-        //     } else {
-        //         System.out.println("Please enter a valid choice.");
-        //     }
-        // }
-        Account newAccount = new Account(firstName, lastName, username, password, phoneNumber, uid++);
+        
+        boolean loop = true;
+        Account newAccount = new Account();      
+        while (loop) {
+            System.out.print("Checking (c) or Savings (s)? : ");
+            char choice = scan.next().charAt(0);
+            if (choice == 'c') {
+                loop = false;
+                newAccount = new CheckingAccount(firstName, lastName, username, password, phoneNumber, uid++);
+            } else if (choice == 's') {
+                loop = false;
+                newAccount = new SavingsAccount(firstName, lastName, username, password, phoneNumber, uid++);
+            } else {
+                System.out.println("Please enter a valid choice.");
+            }
+        }
+        
         accounts.add(newAccount);
         System.out.println("Signup successful!");
     }
