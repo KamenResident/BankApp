@@ -15,21 +15,6 @@ public class Bank {
         uid = 0;   
     }
 
-    // public void exampleMethod() {
-    //     Scanner sc = new Scanner(System.in);
-    //     System.out.print("First method: ");
-    //     String word = sc.nextLine();
-    //     exampleMethod2(sc, word);
-    //     System.out.println("Closing the scanner");
-    //     sc.close();
-    // }
-
-    // private void exampleMethod2(Scanner sc, String s) {
-    //     System.out.print("Second method: ");
-    //     String str = sc.nextLine();
-    //     System.out.println(str + " in second method.");
-    // }
-
     // Work on this further later.
     public void start() {
         Scanner scanner = new Scanner(System.in);
@@ -87,6 +72,7 @@ public class Bank {
         int index = 0;
         boolean found = false;
 
+        // Check if this account is in the database.
         while (!found && index < accounts.size()) {
             Account current = accounts.get(index);
             if (current.getUsername().compareTo(username) == 0 &&
@@ -115,7 +101,8 @@ public class Bank {
         String password = scan.nextLine();
         System.out.print("Phone Number: ");
         String phoneNumber = scan.nextLine();
-        
+
+        // User chooses to either make a checking account or a savings account.
         boolean loop = true;
         Account newAccount = new Account();      
         while (loop) {
@@ -150,10 +137,12 @@ public class Bank {
         return sufficientFunds;
     }
 
+    // Get all of the current accounts in the database.
     public List<Account> getAccounts() {
         return accounts;
     }
 
+    // Get the account that is currently logged in.
     public Account getCurrentAccount() {
         return currentAccount;
     }
