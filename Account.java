@@ -1,3 +1,5 @@
+import java.util.Date;
+
 public class Account {
 
     private String firstName;
@@ -15,6 +17,20 @@ public class Account {
     private int id;
 
     private double annualInterestRate;
+
+    private Date dateOfCreation;
+
+    public Account() {
+        firstName = "";
+        lastName = "";
+        username = "";
+        password = "";
+        phoneNumber = "";
+        balance = 0;
+        id = 0;
+        annualInterestRate = 0;
+        dateOfCreation = new Date();
+    }
 
     public Account(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
         this.firstName = firstName;
@@ -81,6 +97,10 @@ public class Account {
 
     public double getMonthlyInterest() {
         return balance * (getMonthlyInterestRate() / 100);
+    }
+
+    public Date getDateOfCreation() {
+        return dateOfCreation;
     }
 
     public void deposit(double depositAmount) {

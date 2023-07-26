@@ -15,10 +15,10 @@ public class CheckingAccount extends Account {
         overdraftLimit = newLimit;
     }
 
-    public void withdraw(double withdrawalAmount) {
-        if ((getBalance() - withdrawalAmount) > overdraftLimit) {
-            setBalance(getBalance() - withdrawalAmount);
-            System.out.println("Withdrew " + withdrawalAmount);
+    public void withdraw(double withdrawAmount) {
+        if ((getBalance() - withdrawAmount) > overdraftLimit) {
+            setBalance(getBalance() - withdrawAmount);
+            System.out.println("Withdrew " + withdrawAmount);
         } else {
             System.out.println("Withdrawal amount exceeds overdraft limit.");
         }
