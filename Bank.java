@@ -31,92 +31,13 @@ public class Bank {
     }
 
     /**
-     * Used to start the program.
-     */
-    public void start() {
-        // Create our console messages for the program.
-        String bankMessage1 = generateMessage(false, true);
-        String bankMessage2 = generateMessage(true, false);
-        String lineBreak = createLineBreak();  
-
-        // Start accepting user input.
-        Scanner scanner = new Scanner(System.in);
-        System.out.println(lineBreak);
-        System.out.print(bankMessage2);
-        char c = scanner.next().charAt(0);
-
-        // Input loop to keep the program going.
-        boolean loop = true;
-        while (loop) {
-            System.out.println(lineBreak);
-            if (c == 'l') {
-
-                // User enters their username and password.
-                scanner.nextLine();
-                System.out.print("Username: ");
-                String username = scanner.nextLine();
-                System.out.print("Password: ");
-                String password = scanner.nextLine();
-                System.out.println(lineBreak);
-                boolean found = login(username, password);
-                System.out.println(lineBreak);
-
-                // Check if they entered the correct username and password.
-                if (found) {
-                    System.out.println("Welcome, " + currentAccount.getFirstName() + " " + currentAccount.getLastName() + "!");
-                    System.out.print(bankMessage1);   
-                } else {
-                    System.out.println("Incorrect credentials. Please try again.");
-                    System.out.print(bankMessage2);                 
-                }
-                
-            } else if (c == 's') {
-                // Sign up as a new user.
-                signUp(scanner);
-                System.out.println(lineBreak);
-                System.out.print(bankMessage2);
-            } else if (c == 'x') {
-                // Close the application.
-                // This should be your ONLY exit point.
-                loop = false;
-                System.out.println(lineBreak);
-                System.out.println("Goodbye!");
-                scanner.close();
-            } else if (c == 'w' && currentAccount != null) {
-                // Withdraw money from your account.
-                System.out.print("Enter the amount you want to withdraw: ");
-                double withdrawAmount = scanner.nextDouble();
-                currentAccount.withdraw(withdrawAmount);
-                System.out.print(bankMessage1);             
-            } else if (c == 'd' && currentAccount != null) {
-                // Deposit money into your account.  
-                System.out.print("Enter the amount you want to depsosit: ");
-                double depositAmount = scanner.nextDouble();
-                currentAccount.deposit(depositAmount);
-                System.out.print(bankMessage1);   
-            } else if (currentAccount != null) {
-                // Logged in user did not enter any of the listed choices, so they must try again.
-                System.out.print("Please enter a valid response.\n" + bankMessage1);
-            } else {
-                // User trying to log in did not enter any of the listed choices, so they must try again.
-                System.out.print("Please enter a valid response.\n" + bankMessage2);
-            }
-
-            // Receive user input once more.
-            if (loop) {
-                c = scanner.next().charAt(0);
-            }            
-        }
-    }
-
-    /**
      * 
      * 
      * @param username
      * @param password
      * @return
      */
-    private boolean login(String username, String password) {       
+    public boolean login(String username, String password) {       
         int index = 0;
         boolean found = false;
 
@@ -141,7 +62,7 @@ public class Bank {
      * 
      * @param scan
      */
-    private void signUp(Scanner scan) {
+    public void signUp(Scanner scan) {
         scan.nextLine();
         boolean loop = true;
         boolean loop2 = true;
@@ -183,14 +104,18 @@ public class Bank {
         while (loop2) {
             System.out.print("Checking (c) or Savings (s)? : ");
             choice = scan.next().charAt(0);
-            if (choice == 'c') {
-                loop2 = false;
-                newAccount = new CheckingAccount(firstName, lastName, username, password, phoneNumber, uid++);
-            } else if (choice == 's') {
-                loop2 = false;
-                newAccount = new SavingsAccount(firstName, lastName, username, password, phoneNumber, uid++);
-            } else {
-                System.out.println("Please enter a valid choice.");
+            switch (choice) {
+                case 'c':
+                    loop2 = false;
+                    newAccount = new CheckingAccount(firstName, lastName, username, password, phoneNumber, uid++);
+                    break;
+                case 's':
+                    loop2 = false;
+                    newAccount = new SavingsAccount(firstName, lastName, username, password, phoneNumber, uid++);
+                    break;
+                default:
+                    System.out.println("Please enter a valid choice.");
+                    break;
             }
         }
         
@@ -243,7 +168,7 @@ public class Bank {
      * @param username
      * @return
      */
-    private boolean checkUniqueUsername(String username) {
+    public boolean checkUniqueUsername(String username) {
         boolean unique = true;
         for (int i = 0; i < accounts.size(); i++) {
             if (username.compareTo(accounts.get(i).getUsername()) == 0) {
@@ -274,7 +199,7 @@ public class Bank {
      * @param message2
      * @return
      */
-    private String generateMessage(boolean message, boolean message2) {
+    public String generateMessage(boolean message, boolean message2) {
         StringBuilder sb = new StringBuilder();
         if (message) {
             sb.append("Login (l)\n");
