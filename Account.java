@@ -1,4 +1,6 @@
 import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Account {
 
@@ -20,6 +22,8 @@ public class Account {
 
     private Date dateOfCreation;
 
+    private List<Transaction> transactions;
+
     public Account() {
         firstName = "";
         lastName = "";
@@ -30,6 +34,7 @@ public class Account {
         id = 0;
         annualInterestRate = 0;
         dateOfCreation = new Date();
+        transactions =  new ArrayList<Transaction>();
     }
 
     public Account(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
@@ -41,6 +46,7 @@ public class Account {
         this.balance = 0;
         this.id = id;
         annualInterestRate = 0;
+        transactions =  new ArrayList<Transaction>();
     }
 
     public String getFirstName() {
@@ -103,6 +109,14 @@ public class Account {
         return dateOfCreation;
     }
 
+    public void addTransaction(Transaction newTransaction) {
+        transactions.add(newTransaction);
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
         System.out.println("Deposited " + depositAmount);
@@ -112,5 +126,22 @@ public class Account {
         this.balance -= withdrawalAmount;
         System.out.println("Withdrew " + withdrawalAmount);
     }
+
+    public String getTransactionHistory() {
+        StringBuilder sb = new StringBuilder();
+        String history;
+        if (!transactions.isEmpty()) {
+            sb.append("Type  :  Amount  :  Date\n");
+            for (int i = 0; i < transactions.size(); i++) {
+                sb.append(transactions.get(i).toString());
+                sb.append("\n");
+            }
+            history = sb.toString();
+        } else {
+            history = "You have made no transactions yet.";
+        }
+        return history;
+    }
+
 
 }

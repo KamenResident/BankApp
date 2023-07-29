@@ -48,11 +48,11 @@ public class Bank {
                 current.getPassword().compareTo(password) == 0) {
                 found = true;
                 currentAccount = current;
+                System.out.println("Login successful!");
             } else {
                 index++;
             }
         }
-        System.out.println("Login successful!");
 
         return found;
     }
@@ -89,7 +89,7 @@ public class Bank {
                                 lastName.length() > 1;
             validCreds = username.length() > 5 &&
                                  password.length() > 5;
-            uniqueUsername = checkUniqueUsername(username);
+            uniqueUsername = !findAccount(username);
             validNum = phoneNumber.length() == 10;
             if (validName && validCreds && uniqueUsername && validNum) {
                 loop = false;
@@ -147,6 +147,27 @@ public class Bank {
     /**
      * 
      * 
+     * @param username
+     * @return
+     */
+    public boolean findAccount(String username) {
+        boolean found = false;
+        int i = 0;
+        if (!accounts.isEmpty()) {
+            while (!found && i < accounts.size()) {
+                if (accounts.get(i).getUsername().compareTo(username) == 0) {
+                    found = true;
+                } else {
+                    i++;
+                }
+            }
+        }
+        return found;
+    }
+
+    /**
+     * 
+     * 
      * @return
      */
     public List<Account> getAccounts() {
@@ -160,22 +181,6 @@ public class Bank {
      */
     public Account getCurrentAccount() {
         return currentAccount;
-    }
-
-    /**
-     * 
-     * 
-     * @param username
-     * @return
-     */
-    public boolean checkUniqueUsername(String username) {
-        boolean unique = true;
-        for (int i = 0; i < accounts.size(); i++) {
-            if (username.compareTo(accounts.get(i).getUsername()) == 0) {
-                unique = false;
-            }
-        }
-        return unique;
     }
 
     /**
