@@ -1,11 +1,13 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+// import java.util.Scanner;
+
+import javax.swing.JFrame;
 
 /**
  * A program that represents a banking program.
  */
-public class Bank {
+public class Bank extends JFrame {
 
     /**
      * List of all registered accounts.
@@ -57,71 +59,140 @@ public class Bank {
         return found;
     }
 
-    /**
-     * 
-     * 
-     * @param scan
-     */
-    public void signUp(Scanner scan) {
-        scan.nextLine();
-        boolean loop = true;
-        boolean loop2 = true;
-        boolean validName, validCreds, uniqueUsername, validNum;
-        String firstName = "";
-        String lastName = "";
-        String username = "";
-        String password = "";
-        String phoneNumber = "";
-
-        while (loop) {
-            System.out.print("First Name: ");
-            firstName = scan.nextLine();
-            System.out.print("Last name: ");
-            lastName = scan.nextLine();
-            System.out.print("Username : ");
-            username = scan.nextLine();
-            System.out.print("Password: ");
-            password = scan.nextLine();
-            System.out.print("Phone Number: ");
-            phoneNumber = scan.nextLine();
-
-            validName = firstName.length() > 1 && 
-                                lastName.length() > 1;
-            validCreds = username.length() > 5 &&
-                                 password.length() > 5;
-            uniqueUsername = !findAccount(username);
-            validNum = phoneNumber.length() == 10;
-            if (validName && validCreds && uniqueUsername && validNum) {
-                loop = false;
-            } else {
-                System.out.println("Invalid credentials. Try again.");
-            }
-        }
-
-        // User chooses to either make a checking account or a savings account.       
-        Account newAccount = new Account();
-        char choice;      
-        while (loop2) {
-            System.out.print("Checking (c) or Savings (s)? : ");
-            choice = scan.next().charAt(0);
-            switch (choice) {
-                case 'c':
-                    loop2 = false;
-                    newAccount = new CheckingAccount(firstName, lastName, username, password, phoneNumber, uid++);
-                    break;
-                case 's':
-                    loop2 = false;
-                    newAccount = new SavingsAccount(firstName, lastName, username, password, phoneNumber, uid++);
-                    break;
-                default:
-                    System.out.println("Please enter a valid choice.");
-                    break;
-            }
-        }
+    public boolean signUp(String firstName, String lastName, String username, 
+                            String password, String phoneNumber) {
+        boolean signedIn = false;
+        boolean validNameLength = firstName.length() > 1 && lastName.length() > 1;
+        boolean validUsernameLength = username.length() > 5;
+        boolean validPassword = checkPassword(password);
         
-        accounts.add(newAccount);
-        System.out.println("Signup successful!");
+        return signedIn;
     }
+
+    public boolean checkName(String firstName, String lastName) {
+        boolean found = false;
+        int i = 0;
+        if (!accounts.isEmpty()) {
+            while (!found && i < accounts.size()) {
+                if (accounts.get(i).getFirstName().compareTo(firstName) == 0
+                    && accounts.get(i).getLastName().compareTo(lastName) == 0) {
+                    found = true;
+                } else {
+                    i++;
+                }
+            }
+        }
+        return found;
+    }
+
+    public boolean checkUsername(String username) {
+        boolean found = false;
+        int i = 0;
+        if (!accounts.isEmpty()) {
+            while (!found && i < accounts.size()) {
+                if (accounts.get(i).getUsername().compareTo(username) == 0) {
+                    found = true;
+                } else {
+                    i++;
+                }
+            }
+        }
+        return found;
+
+    }
+
+    public boolean checkPassword(String password) {
+        boolean validLength = password.length() > 6;
+        boolean numbers = false;
+        boolean specialChars = false;
+        boolean upperCase = false;
+        boolean lowerCase = false;
+        char currentChar;
+        if (validLength) {
+            for (int i = 0; i < password.length(); i++) {
+                currentChar = password.charAt(i);
+
+                if (Character.isDigit(currentChar)) {
+                    numbers = true;
+                }
+                if (Character.isUpperCase(currentChar)) {
+                    upperCase = true;
+                }
+                if (Character.isLowerCase(currentChar)) {
+                    lowerCase = true;
+                }
+                if(!Character.isDigit(currentChar)
+                    && !Character.isLetter(currentChar)
+                    && !Character.isWhitespace(currentChar)) {
+                    specialChars = true;
+                }
+            }
+        }
+
+        boolean ready = validLength && numbers && specialChars && upperCase && lowerCase;
+        return ready;
+    }
+
+    // public void signUp(Scanner scan) {
+    //     scan.nextLine();
+    //     boolean loop = true;
+    //     boolean loop2 = true;
+    //     boolean validName, validCreds, uniqueUsername, validNum;
+    //     String firstName = "";
+    //     String lastName = "";
+    //     String username = "";
+    //     String password = "";
+    //     String phoneNumber = "";
+
+    //     while (loop) {
+    //         System.out.print("First Name: ");
+    //         firstName = scan.nextLine();
+    //         System.out.print("Last name: ");
+    //         lastName = scan.nextLine();
+    //         System.out.print("Username : ");
+    //         username = scan.nextLine();
+    //         System.out.print("Password: ");
+    //         password = scan.nextLine();
+    //         System.out.print("Phone Number: ");
+    //         phoneNumber = scan.nextLine();
+
+    //         validName = firstName.length() > 1 && 
+    //                             lastName.length() > 1;
+    //         validCreds = username.length() > 5 &&
+    //                              password.length() > 5;
+    //         uniqueUsername = !findAccount(username);
+    //         validNum = phoneNumber.length() == 10;
+    //         if (validName && validCreds && uniqueUsername && validNum) {
+    //             loop = false;
+    //         } else {
+    //             System.out.println("Invalid credentials. Try again.");
+    //         }
+    //     }
+
+    //     // User chooses to either make a checking account or a savings account.       
+    //     Account newAccount = new Account();
+    //     char choice;      
+    //     while (loop2) {
+    //         System.out.print("Checking (c) or Savings (s)? : ");
+    //         choice = scan.next().charAt(0);
+    //         switch (choice) {
+    //             case 'c':
+    //                 loop2 = false;
+    //                 newAccount = new CheckingAccount(firstName, lastName, username, password, phoneNumber, uid++);
+    //                 break;
+    //             case 's':
+    //                 loop2 = false;
+    //                 newAccount = new SavingsAccount(firstName, lastName, username, password, phoneNumber, uid++);
+    //                 break;
+    //             default:
+    //                 System.out.println("Please enter a valid choice.");
+    //                 break;
+    //         }
+    //     }
+        
+    //     accounts.add(newAccount);
+    //     System.out.println("Signup successful!");
+    // }
 
     /**
      * 
