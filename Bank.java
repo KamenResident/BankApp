@@ -1,8 +1,16 @@
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 // import java.util.Scanner;
 
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  * A program that represents a banking program.
@@ -24,12 +32,168 @@ public class Bank extends JFrame {
      */
     private int uid;
 
+    private JFrame loginWindow;
+
+    private JFrame signUpWindow;
+
     /**
      * Constructor for the banking program.
      */
     public Bank() {
+        loginWindow = new JFrame("Login");
+        signUpWindow = new JFrame("Sign Up");
         accounts = new ArrayList<Account>();
         uid = 0; 
+        init();
+        createComponents();
+    }
+
+    private void init() {
+        setTitle("BankApp");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(500, 500);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
+    }
+
+    private void createComponents() {
+        createLoginWindow();
+        createSignUpWindow();
+    }
+
+    private void createLoginWindow() {
+        loginWindow.setResizable(false);
+        loginWindow.setLocationRelativeTo(null);
+        loginWindow.setSize(500, 500);
+        loginWindow.setBackground(Color.BLACK);
+        loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginWindow.setVisible(true);
+
+        JPanel loginPanel = new JPanel();
+        GroupLayout loginLayout = new GroupLayout(loginPanel);
+        loginPanel.setSize(500, 500);
+        loginPanel.setLayout(loginLayout);
+        loginPanel.setOpaque(false);
+        loginLayout.setAutoCreateGaps(true);
+        loginLayout.setAutoCreateContainerGaps(true);
+
+        JTextField usernameField = new JTextField("Username");
+        JTextField passwordField = new JTextField("Password");
+        JTextArea failMessage = new JTextArea();
+
+        JButton loginButton = new JButton("Login");
+        loginButton.setBackground(Color.GREEN);
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean loginSuccess = login(usernameField.getText(),
+                                                passwordField.getText());
+                if (loginSuccess) {
+                    loginWindow.setVisible(false);
+                    setVisible(true);
+                } else {
+                    failMessage.setText("Wrong credentials. Try again");
+                }
+            }
+        });
+
+        JButton signUpButton = new JButton("Sign Up");
+        signUpButton.setBackground(Color.ORANGE);
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginWindow.setVisible(false);
+                signUpWindow.setVisible(true);
+            }
+        });
+
+        loginLayout.setHorizontalGroup(
+            loginLayout.createSequentialGroup()
+            .addGroup(loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING))
+                .addComponent(failMessage)
+                .addComponent(usernameField)
+                .addComponent(passwordField)
+                .addComponent(loginButton)
+        );
+        loginLayout.setVerticalGroup(
+            loginLayout.createSequentialGroup()
+            .addGroup(loginLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                .addComponent(failMessage))
+            .addComponent(usernameField)
+            .addComponent(passwordField)
+            .addComponent(loginButton)
+        );
+
+        loginWindow.add(loginPanel);
+    }
+
+    private void createSignUpWindow() {
+        signUpWindow.setResizable(false);
+        signUpWindow.setLocationRelativeTo(null);
+        signUpWindow.setSize(500, 500);
+        signUpWindow.setBackground(Color.BLACK);
+        signUpWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        signUpWindow.setVisible(true);
+
+        JPanel signUpPanel = new JPanel();
+        GroupLayout signUpLayout = new GroupLayout(signUpPanel);
+        signUpPanel.setSize(500, 500);
+        signUpPanel.setLayout(signUpLayout);
+        signUpPanel.setOpaque(false);
+        signUpLayout.setAutoCreateGaps(true);
+        signUpLayout.setAutoCreateContainerGaps(true);
+
+        JTextArea failMessage = new JTextArea();
+        JTextField firstNameField = new JTextField("First Name");
+        JTextField lastNameField = new JTextField("Last Name");
+        JTextField usernameField = new JTextField("Username");
+        JTextField passwordField = new JTextField("Password");
+        JTextField numberField = new JTextField("Phone Number");
+        JButton checkingsButton = new JButton("Checking");
+        JButton savingsButton = new JButton("Savings");
+
+        boolean signUpSuccess = signUp(firstNameField.getText(), 
+                                        lastNameField.getText(), 
+                                        usernameField.getText(), 
+                                        passwordField.getText(), 
+                                        numberField.getText());
+        
+        checkingsButton.setBackground(Color.RED);
+        checkingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (signUpSuccess) {
+                    CheckingAccount checkingAccount = new CheckingAccount(firstNameField.getText(),
+                                                                            lastNameField.getText(),
+                                                                            usernameField.getText(),
+                                                                            passwordField.getText(),
+                                                                            numberField.getText(),
+                                                                            uid++);
+                    accounts.add(checkingAccount);
+                }
+            }
+        });
+
+        savingsButton.setBackground(Color.BLUE);
+        savingsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (signUpSuccess) {
+                    SavingsAccount savingsAccount = new SavingsAccount(firstNameField.getText(),
+                                                                            lastNameField.getText(),
+                                                                            usernameField.getText(),
+                                                                            passwordField.getText(),
+                                                                            numberField.getText(),
+                                                                            uid++);
+                    accounts.add(savingsAccount);
+                } else {
+                    failMessage.setText("");
+                }
+            }
+        });
+
+        signUpWindow.add(signUpPanel);
     }
 
     /**
@@ -65,17 +229,24 @@ public class Bank extends JFrame {
         boolean validNameLength = firstName.length() > 1 && lastName.length() > 1;
         boolean validUsernameLength = username.length() > 5;
         boolean validPassword = checkPassword(password);
-        
+        boolean validPhoneNumber = phoneNumber.length() == 10;
+        boolean uniqueAccount = !(checkName(firstName, lastName) 
+                                    && checkUsername(username));
+        signedIn = validNameLength 
+                    && validUsernameLength 
+                    && validPassword 
+                    && validPhoneNumber 
+                    && uniqueAccount;       
         return signedIn;
     }
 
     public boolean checkName(String firstName, String lastName) {
         boolean found = false;
+        String accountName = firstName + " " + lastName;
         int i = 0;
         if (!accounts.isEmpty()) {
             while (!found && i < accounts.size()) {
-                if (accounts.get(i).getFirstName().compareTo(firstName) == 0
-                    && accounts.get(i).getLastName().compareTo(lastName) == 0) {
+                if (accounts.get(i).getName().compareTo(accountName) == 0) {
                     found = true;
                 } else {
                     i++;
