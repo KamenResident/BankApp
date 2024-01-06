@@ -14,6 +14,10 @@ public class Account {
 
     private String phoneNumber;
 
+    private String email;
+
+    private String address;
+
     private int id;
 
     private double annualInterestRate;
@@ -27,6 +31,8 @@ public class Account {
         username = "";
         password = "";
         phoneNumber = "";
+        email = "";
+        address = "";
         balance = 0;
         id = 0;
         annualInterestRate = 0;
@@ -34,11 +40,18 @@ public class Account {
         transactions =  new ArrayList<Transaction>();
     }
 
-    public Account(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
-        name = firstName + " " + lastName;
+    public Account(String firstName, String lastName, String username, 
+                                                        String password, 
+                                                        String phoneNumber,
+                                                        String email,
+                                                        String address, 
+                                                        int id) {
+        name = String.format("%s %s", firstName, lastName);
         this.username = username;
         this.password = password;
         this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
         this.balance = 0;
         this.id = id;
         annualInterestRate = 0;
@@ -71,6 +84,14 @@ public class Account {
 
     public String getPhoneNumber() {
         return this.phoneNumber;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getAddress() {
+        return this.address;
     }
 
     public int getId() {

@@ -6,7 +6,6 @@ import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class LoginWindow extends JFrame {
@@ -39,10 +38,15 @@ public class LoginWindow extends JFrame {
         loginLayout.setAutoCreateContainerGaps(true);
 
         JTextField usernameField = new JTextField("Username");
+        usernameField.setSize(250, 100);
+        usernameField.setLocation(500, 200);
         JTextField passwordField = new JTextField("Password");
-        JTextArea failMessage = new JTextArea();
+        passwordField.setSize(250, 100);
+        passwordField.setLocation(500, 400);
 
         JButton loginButton = new JButton("Login");
+        loginButton.setSize(100, 100);
+        loginButton.setLocation(500, 600);
         loginButton.setBackground(Color.GREEN);
         loginButton.addActionListener(new ActionListener() {
             @Override
@@ -53,12 +57,14 @@ public class LoginWindow extends JFrame {
                     setVisible(false);
                     bank.setVisible(true);
                 } else {
-                    failMessage.setText("Wrong credentials. Try again");
+                    
                 }
             }
         });
 
         JButton signUpButton = new JButton("Sign Up");
+        signUpButton.setSize(100, 100);
+        signUpButton.setLocation(500, 800);
         signUpButton.setBackground(Color.ORANGE);
         signUpButton.addActionListener(new ActionListener() {
             @Override
@@ -71,18 +77,18 @@ public class LoginWindow extends JFrame {
         loginLayout.setHorizontalGroup(
             loginLayout.createSequentialGroup()
             .addGroup(loginLayout.createParallelGroup(GroupLayout.Alignment.LEADING))
-                .addComponent(failMessage)
                 .addComponent(usernameField)
                 .addComponent(passwordField)
                 .addComponent(loginButton)
+                .addComponent(signUpButton)
         );
         loginLayout.setVerticalGroup(
             loginLayout.createSequentialGroup()
             .addGroup(loginLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(failMessage))
-            .addComponent(usernameField)
+                .addComponent(usernameField))
             .addComponent(passwordField)
             .addComponent(loginButton)
+            .addComponent(signUpButton)
         );
 
         add(loginPanel);

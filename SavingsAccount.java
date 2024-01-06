@@ -4,8 +4,13 @@ public class SavingsAccount extends Account {
         super();
     }
 
-    public SavingsAccount(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
-        super(firstName, lastName, username, password, phoneNumber, id);
+    public SavingsAccount(String firstName, String lastName, String username, 
+                                                                String password, 
+                                                                String phoneNumber, 
+                                                                String email, 
+                                                                String address, 
+                                                                int id) {
+        super(firstName, lastName, username, password, phoneNumber, email, address, id);
     }
 
     public void withdraw(double withdrawAmount) {

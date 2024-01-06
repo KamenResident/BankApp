@@ -51,8 +51,7 @@ public class Bank extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
         setLocationRelativeTo(null);
-        setResizable(false);
-        
+        setResizable(false);       
     }
 
     private void createComponents() {
@@ -92,44 +91,48 @@ public class Bank extends JFrame {
         return found;
     }
 
-    public boolean signUp(String firstName, String lastName, String username, 
-                            String password, String phoneNumber, int choice) {
+    public boolean signUp(String[] credentials, int choice) {
         boolean signedIn = false;
-        boolean validNameLength = firstName.length() > 1 && lastName.length() > 1;
-        boolean validUsernameLength = username.length() > 5;
-        boolean validPassword = checkPassword(password);
-        boolean validPhoneNumber = phoneNumber.length() == 10;
-        boolean uniqueAccount = !(checkName(firstName, lastName) 
-                                    && checkUsername(username));
+        boolean validNameLength = credentials[0].length() > 1 && credentials[1].length() > 1;
+        boolean validUsernameLength = credentials[2].length() > 5;
+        boolean validPassword = checkPassword(credentials[3]);
+        boolean validPhoneNumber = credentials[4].length() == 10;
+        boolean uniqueAccount = !(checkName(credentials[0], credentials[1]) 
+                                    && checkUsername(credentials[2]));
         signedIn = validNameLength 
                     && validUsernameLength 
                     && validPassword 
                     && validPhoneNumber 
                     && uniqueAccount;
         
+        String address = String.format("%s, %s %s", credentials[6], credentials[7], credentials[8]);
         if (signedIn) {
             Account account;
             if (choice == 0) {
-                account = new CheckingAccount(firstName,
-                                            lastName,
-                                            username, 
-                                            password, 
-                                            phoneNumber, 
+                account = new CheckingAccount(credentials[0],
+                                            credentials[1],
+                                            credentials[2], 
+                                            credentials[3], 
+                                            credentials[4], 
+                                            credentials[5], 
+                                            address, 
                                             uid++);
             } else {
-                account = new SavingsAccount(firstName,
-                                            lastName,
-                                            username, 
-                                            password, 
-                                            phoneNumber, 
-                                            uid++); 
+                account = new SavingsAccount(credentials[0],
+                                            credentials[1],
+                                            credentials[2], 
+                                            credentials[3], 
+                                            credentials[4], 
+                                            credentials[5], 
+                                            address, 
+                                            uid++);
             }
             accounts.add(account);
         }
         return signedIn;
     }
 
-    public boolean checkName(String firstName, String lastName) {
+    private boolean checkName(String firstName, String lastName) {
         boolean found = false;
         String accountName = firstName + " " + lastName;
         int i = 0;
@@ -145,7 +148,7 @@ public class Bank extends JFrame {
         return found;
     }
 
-    public boolean checkUsername(String username) {
+    private boolean checkUsername(String username) {
         boolean found = false;
         int i = 0;
         if (!accounts.isEmpty()) {
@@ -161,7 +164,7 @@ public class Bank extends JFrame {
 
     }
 
-    public boolean checkPassword(String password) {
+    private boolean checkPassword(String password) {
         boolean validLength = password.length() > 6;
         boolean numbers = false;
         boolean specialChars = false;

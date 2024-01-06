@@ -25,7 +25,7 @@ public class SignUpWindow extends JFrame {
         setSize(1000, 1000);
         setBackground(Color.BLACK);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
+        setVisible(false);
     }
 
     private void createComponents() {
@@ -43,6 +43,10 @@ public class SignUpWindow extends JFrame {
         JTextField usernameField = new JTextField("Username");
         JTextField passwordField = new JTextField("Password");
         JTextField numberField = new JTextField("Phone Number");
+        JTextField emailField =  new JTextField("Email");
+        JTextField stateField = new JTextField("State");
+        JTextField cityField = new JTextField("City");
+        JTextField zipCodeField = new JTextField("ZIP");
         JButton checkingsButton = new JButton("Checking");
         JButton savingsButton = new JButton("Savings");
 
@@ -50,7 +54,11 @@ public class SignUpWindow extends JFrame {
                                             lastNameField.getText(),
                                             usernameField.getText(),
                                             passwordField.getText(),
-                                            numberField.getText() };
+                                            numberField.getText(), 
+                                            emailField.getText(), 
+                                            stateField.getText(),
+                                            cityField.getText(),
+                                            zipCodeField.getText() };
         addButtonListener(checkingsButton, credentials, 0,
                                             Color.GREEN,
                                             failMessage);
@@ -70,11 +78,7 @@ public class SignUpWindow extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean signUpSuccess = bank.signUp(userCredentials[0], 
-                                        userCredentials[1], 
-                                        userCredentials[2], 
-                                        userCredentials[3], 
-                                        userCredentials[4], choice);
+                boolean signUpSuccess = bank.signUp(userCredentials, choice);
                 if (signUpSuccess) {
                     setVisible(false);
                     bank.manageWindows(1);

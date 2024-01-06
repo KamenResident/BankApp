@@ -2,8 +2,13 @@ public class CheckingAccount extends Account {
 
     private double overdraftLimit;
 
-    public CheckingAccount(String firstName, String lastName, String username, String password, String phoneNumber, int id) {
-        super(firstName, lastName, username, password, phoneNumber, id);
+    public CheckingAccount(String firstName, String lastName, String username, 
+                                                                String password, 
+                                                                String phoneNumber, 
+                                                                String email,
+                                                                String address,
+                                                                int id) {
+        super(firstName, lastName, username, password, phoneNumber, email, address, id);
         overdraftLimit = 300;
     }
 
