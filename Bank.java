@@ -30,8 +30,14 @@ public class Bank extends JFrame {
      */
     private int uid;
 
+    /**
+     * Window used for handling logins.
+     */
     private LoginWindow loginWindow;
 
+    /**
+     * Window used for handling sign ups.
+     */
     private SignUpWindow signUpWindow;
 
     /**
@@ -46,6 +52,9 @@ public class Bank extends JFrame {
         createComponents();
     }
 
+    /**
+     * Used to initialize the application's elements.
+     */
     private void init() {
         setTitle("BankApp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +63,9 @@ public class Bank extends JFrame {
         setResizable(false);       
     }
 
+    /**
+     * Create the necessary components for the application.
+     */
     private void createComponents() {
         JPanel mainPanel = new JPanel();
         GroupLayout mainLayout = new GroupLayout(mainPanel);
@@ -65,11 +77,11 @@ public class Bank extends JFrame {
     }
 
     /**
+     * Used for properly logging in registered users.
      * 
-     * 
-     * @param username
-     * @param password
-     * @return
+     * @param username is the user's username.
+     * @param password is the user's password.
+     * @return true if login is successful, false otherwise.
      */
     public boolean login(String username, String password) {       
         int index = 0;
@@ -91,6 +103,13 @@ public class Bank extends JFrame {
         return found;
     }
 
+    /**
+     * Used to allow users to sign up for the application.
+     * 
+     * @param credentials is an array of credentials entered by the user.
+     * @param choice determines if the user wants to make a checkings or savings account.
+     * @return true if sign up with valid credentials is successful, false otherwise.
+     */
     public boolean signUp(String[] credentials, int choice) {
         boolean signedIn = false;
         boolean validNameLength = credentials[0].length() > 1 && credentials[1].length() > 1;
@@ -132,13 +151,22 @@ public class Bank extends JFrame {
         return signedIn;
     }
 
+    /**
+     * Checks any users with the name being searched.
+     * Also serves as a way to prevent multiple users with the same name
+     * to preserve identity.
+     * 
+     * @param firstName is the first name of the user being searched.
+     * @param lastName is the last name of the user being searched.
+     * @return true if a user with the same name exists, false otherwise.
+     */
     private boolean checkName(String firstName, String lastName) {
+        String name = String.format("%s %s", firstName, lastName);
         boolean found = false;
-        String accountName = firstName + " " + lastName;
         int i = 0;
         if (!accounts.isEmpty()) {
             while (!found && i < accounts.size()) {
-                if (accounts.get(i).getName().compareTo(accountName) == 0) {
+                if (accounts.get(i).getName().compareTo(name) == 0) {
                     found = true;
                 } else {
                     i++;
@@ -148,6 +176,14 @@ public class Bank extends JFrame {
         return found;
     }
 
+    /**
+     * Checks any users with the username being searched.
+     * Also serves as a way to prevent new users using a username that
+     * has already been used.
+     * 
+     * @param username is the username being searched.
+     * @return true if there exists a user with the username, false otherwise.
+     */
     private boolean checkUsername(String username) {
         boolean found = false;
         int i = 0;
@@ -164,6 +200,15 @@ public class Bank extends JFrame {
 
     }
 
+    /**
+     * Checks to ensure the password meets the requirements.
+     * The password must have more than 6 characters and at least
+     * one of the following: a digit, special character, uppercase letter,
+     *                       and a lowercase letter.
+     * 
+     * @param password is the password the user intends to use for their account.
+     * @return true if the password meets all the requirements, false otherwise.
+     */
     private boolean checkPassword(String password) {
         boolean validLength = password.length() > 6;
         boolean numbers = false;
@@ -197,12 +242,12 @@ public class Bank extends JFrame {
     }
 
     /**
+     * Used to help transfer money between two accounts.
      * 
-     * 
-     * @param sender
-     * @param recipient
-     * @param transferAmount
-     * @return
+     * @param sender is the account sending the money.
+     * @param recipient is the account receiving the money.
+     * @param transferAmount is the amount of money being transferred.
+     * @return true if the transfer is successful, false otherwise.
      */
     public boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
         boolean sufficientFunds = false;
@@ -218,44 +263,28 @@ public class Bank extends JFrame {
     }
 
     /**
+     * Retrieves the list of currently registered accounts.
      * 
-     * 
-     * @param username
-     * @return
-     */
-    public boolean findAccount(String username) {
-        boolean found = false;
-        int i = 0;
-        if (!accounts.isEmpty()) {
-            while (!found && i < accounts.size()) {
-                if (accounts.get(i).getUsername().compareTo(username) == 0) {
-                    found = true;
-                } else {
-                    i++;
-                }
-            }
-        }
-        return found;
-    }
-
-    /**
-     * 
-     * 
-     * @return
+     * @return the list of currently registered accounts.
      */
     public List<Account> getAccounts() {
         return accounts;
     }
 
     /**
+     * Retrieves the current account that is logged in.
      * 
-     * 
-     * @return
+     * @return the account currently logged in.
      */
     public Account getCurrentAccount() {
         return currentAccount;
     }
 
+    /**
+     * Used to toggle the visibility of both the login and signup windows.
+     * 
+     * @param choice is a flag for toggling the visilibity of either the login or signup window.
+     */
     public void manageWindows(int choice) {
         if (choice == 0) {
             signUpWindow.setVisible(true);
