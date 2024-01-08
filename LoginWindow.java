@@ -69,8 +69,7 @@ public class LoginWindow extends JFrame {
         loginPanel.setBorder(panelBorder);
 
         // Create the labels, fields, and buttons for logging in.
-        JLabel loginLabel = new JLabel("", JLabel.CENTER);
-        loginLabel.setText("Log in with your credentials.");
+        JLabel loginLabel = new JLabel("Log in with your credentials.", JLabel.CENTER);
         loginLabel.setForeground(Color.WHITE);
         Font header = new Font("serif", Font.PLAIN, 24);
         loginLabel.setFont(header);
