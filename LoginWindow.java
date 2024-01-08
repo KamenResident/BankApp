@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -88,7 +89,7 @@ public class LoginWindow extends JFrame {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean loginSuccess = bank.login(usernameField.getText(),
+                boolean loginSuccess = login(usernameField.getText(),
                                                 passwordField.getText());
                 if (loginSuccess) {
                     setVisible(false);
@@ -149,6 +150,34 @@ public class LoginWindow extends JFrame {
 
         add(loginLabel);
         add(loginPanel);
+    }
+
+    /**
+     * Used for properly logging in registered users.
+     * 
+     * @param username is the user's username.
+     * @param password is the user's password.
+     * @return true if login is successful, false otherwise.
+     */
+    private boolean login(String username, String password) {       
+        int index = 0;
+        boolean found = false;
+
+        // Check if this account is in the database.
+        List<Account> accounts = bank.getAccounts();
+        while (!found && index < accounts.size()) {
+            Account current = accounts.get(index);
+            if (current.getUsername().compareTo(username) == 0 &&
+                current.getPassword().compareTo(password) == 0) {
+                found = true;
+                bank.setCurrentAccount(current);
+                System.out.println("Login successful!");
+            } else {
+                index++;
+            }
+        }
+
+        return found;
     }
 
 }

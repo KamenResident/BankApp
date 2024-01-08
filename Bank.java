@@ -3,11 +3,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -77,81 +78,6 @@ public class Bank extends JFrame {
     }
 
     /**
-     * Used for properly logging in registered users.
-     * 
-     * @param username is the user's username.
-     * @param password is the user's password.
-     * @return true if login is successful, false otherwise.
-     */
-    public boolean login(String username, String password) {       
-        int index = 0;
-        boolean found = false;
-
-        // Check if this account is in the database.
-        while (!found && index < accounts.size()) {
-            Account current = accounts.get(index);
-            if (current.getUsername().compareTo(username) == 0 &&
-                current.getPassword().compareTo(password) == 0) {
-                found = true;
-                currentAccount = current;
-                System.out.println("Login successful!");
-            } else {
-                index++;
-            }
-        }
-
-        return found;
-    }
-
-    /**
-     * Used to allow users to sign up for the application.
-     * 
-     * @param credentials is an array of credentials entered by the user.
-     * @param choice determines if the user wants to make a checkings or savings account.
-     * @return true if sign up with valid credentials is successful, false otherwise.
-     */
-    public boolean signUp(String[] credentials, int choice) {
-        boolean signedIn = false;
-        boolean validNameLength = credentials[0].length() > 1 && credentials[1].length() > 1;
-        boolean validUsernameLength = credentials[2].length() > 5;
-        boolean validPassword = checkPassword(credentials[3]);
-        boolean validPhoneNumber = credentials[4].length() == 10;
-        boolean uniqueAccount = !(checkName(credentials[0], credentials[1]) 
-                                    && checkUsername(credentials[2]));
-        signedIn = validNameLength 
-                    && validUsernameLength 
-                    && validPassword 
-                    && validPhoneNumber 
-                    && uniqueAccount;
-        
-        String address = String.format("%s, %s %s", credentials[6], credentials[7], credentials[8]);
-        if (signedIn) {
-            Account account;
-            if (choice == 0) {
-                account = new CheckingAccount(credentials[0],
-                                            credentials[1],
-                                            credentials[2], 
-                                            credentials[3], 
-                                            credentials[4], 
-                                            credentials[5], 
-                                            address, 
-                                            uid++);
-            } else {
-                account = new SavingsAccount(credentials[0],
-                                            credentials[1],
-                                            credentials[2], 
-                                            credentials[3], 
-                                            credentials[4], 
-                                            credentials[5], 
-                                            address, 
-                                            uid++);
-            }
-            accounts.add(account);
-        }
-        return signedIn;
-    }
-
-    /**
      * Checks any users with the name being searched.
      * Also serves as a way to prevent multiple users with the same name
      * to preserve identity.
@@ -177,17 +103,18 @@ public class Bank extends JFrame {
     }
 
     /**
-     * Checks any users with the username being searched.
+     * Checks any users with the username being searched and ensures
+     * the username meets the required length.
      * Also serves as a way to prevent new users using a username that
      * has already been used.
      * 
      * @param username is the username being searched.
      * @return true if there exists a user with the username, false otherwise.
      */
-    private boolean checkUsername(String username) {
+    public boolean checkUsername(String username) {
         boolean found = false;
         int i = 0;
-        if (!accounts.isEmpty()) {
+        if (!accounts.isEmpty() && username.length() > 5) {
             while (!found && i < accounts.size()) {
                 if (accounts.get(i).getUsername().compareTo(username) == 0) {
                     found = true;
@@ -209,7 +136,7 @@ public class Bank extends JFrame {
      * @param password is the password the user intends to use for their account.
      * @return true if the password meets all the requirements, false otherwise.
      */
-    private boolean checkPassword(String password) {
+    public boolean checkPassword(String password) {
         boolean validLength = password.length() > 6;
         boolean numbers = false;
         boolean specialChars = false;
@@ -256,10 +183,36 @@ public class Bank extends JFrame {
             sender.setBalance(sender.getBalance() - transferAmount);
             sufficientFunds = true;
         } else {
-            System.out.println("Insufficient funds");
+            
         }
 
         return sufficientFunds;
+    }
+
+    /**
+     * 
+     * @param user
+     */
+    public void setCurrentAccount(Account user) {
+        currentAccount = user;
+    }
+
+    /**
+     * 
+     * 
+     * @param newAccount
+     */
+    public void addNewAccount(Account newAccount) {
+        accounts.add(newAccount);
+    }
+
+    /**
+     * 
+     * 
+     * @return
+     */
+    public int getUID() {
+        return uid++;
     }
 
     /**
