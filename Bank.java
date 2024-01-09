@@ -45,12 +45,12 @@ public class Bank extends JFrame {
      * Constructor for the banking program.
      */
     public Bank() {
-        loginWindow = new LoginWindow(this);
-        signUpWindow = new SignUpWindow(this);
         accounts = new ArrayList<Account>();
         uid = 0; 
         init();
         createComponents();
+        loginWindow = new LoginWindow(this);
+        signUpWindow = new SignUpWindow(this);
     }
 
     /**
@@ -78,31 +78,6 @@ public class Bank extends JFrame {
     }
 
     /**
-     * Checks any users with the name being searched.
-     * Also serves as a way to prevent multiple users with the same name
-     * to preserve identity.
-     * 
-     * @param firstName is the first name of the user being searched.
-     * @param lastName is the last name of the user being searched.
-     * @return true if a user with the same name exists, false otherwise.
-     */
-    private boolean checkName(String firstName, String lastName) {
-        String name = String.format("%s %s", firstName, lastName);
-        boolean found = false;
-        int i = 0;
-        if (!accounts.isEmpty()) {
-            while (!found && i < accounts.size()) {
-                if (accounts.get(i).getName().compareTo(name) == 0) {
-                    found = true;
-                } else {
-                    i++;
-                }
-            }
-        }
-        return found;
-    }
-
-    /**
      * Checks any users with the username being searched and ensures
      * the username meets the required length.
      * Also serves as a way to prevent new users using a username that
@@ -111,7 +86,7 @@ public class Bank extends JFrame {
      * @param username is the username being searched.
      * @return true if there exists a user with the username, false otherwise.
      */
-    public boolean checkUsername(String username) {
+    protected boolean checkUsername(String username) {
         boolean found = false;
         int i = 0;
         if (!accounts.isEmpty() && username.length() > 5) {
@@ -136,7 +111,7 @@ public class Bank extends JFrame {
      * @param password is the password the user intends to use for their account.
      * @return true if the password meets all the requirements, false otherwise.
      */
-    public boolean checkPassword(String password) {
+    protected boolean checkPassword(String password) {
         boolean validLength = password.length() > 6;
         boolean numbers = false;
         boolean specialChars = false;
@@ -176,42 +151,42 @@ public class Bank extends JFrame {
      * @param transferAmount is the amount of money being transferred.
      * @return true if the transfer is successful, false otherwise.
      */
-    public boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
+    private boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
         boolean sufficientFunds = false;
-        if (sender.getBalance() > transferAmount) {
+        if (sender.getBalance() >= transferAmount) {
             recipient.setBalance(recipient.getBalance() + transferAmount);
             sender.setBalance(sender.getBalance() - transferAmount);
             sufficientFunds = true;
-        } else {
-            
         }
 
         return sufficientFunds;
     }
 
     /**
+     * Used to set the current account that is logged in.
      * 
-     * @param user
+     * @param user is the account that is logged in.
      */
-    public void setCurrentAccount(Account user) {
+    protected void setCurrentAccount(Account user) {
         currentAccount = user;
     }
 
     /**
+     * Used to add a new account for the application upon successful
+     * sign up.
      * 
-     * 
-     * @param newAccount
+     * @param newAccount is the new account being registered.
      */
-    public void addNewAccount(Account newAccount) {
+    protected void addNewAccount(Account newAccount) {
         accounts.add(newAccount);
     }
 
     /**
+     * Generates a unique user ID for a new account.
      * 
-     * 
-     * @return
+     * @return a unique user ID
      */
-    public int getUID() {
+    protected int getUID() {
         return uid++;
     }
 
@@ -220,7 +195,7 @@ public class Bank extends JFrame {
      * 
      * @return the list of currently registered accounts.
      */
-    public List<Account> getAccounts() {
+    protected List<Account> getAccounts() {
         return accounts;
     }
 
@@ -229,7 +204,7 @@ public class Bank extends JFrame {
      * 
      * @return the account currently logged in.
      */
-    public Account getCurrentAccount() {
+    protected Account getCurrentAccount() {
         return currentAccount;
     }
 
@@ -238,7 +213,7 @@ public class Bank extends JFrame {
      * 
      * @param choice is a flag for toggling the visilibity of either the login or signup window.
      */
-    public void manageWindows(int choice) {
+    protected void manageWindows(int choice) {
         if (choice == 0) {
             signUpWindow.setVisible(true);
         } else {

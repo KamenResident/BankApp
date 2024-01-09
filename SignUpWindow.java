@@ -20,28 +20,29 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 /**
- * 
+ * Window for facilitating the interactions with the user
+ * for signing up new accounts.
  */
 public class SignUpWindow extends JFrame {
 
     /**
-     * 
+     * The primary bank application.
      */
     private Bank bank;
 
     /**
+     * Constructor for the window.
      * 
-     * 
-     * @param bank
+     * @param bank is the bank application using this window.
      */
-    public SignUpWindow(Bank bank) {
+    protected SignUpWindow(Bank bank) {
         this.bank = bank;
         init();
         createComponents();
     }
 
     /**
-     * 
+     * Used to initialize the window for setup.
      */
     private void init() {
         setTitle("Sign Up");
@@ -55,9 +56,10 @@ public class SignUpWindow extends JFrame {
     }
 
     /**
-     * 
+     * Used to create all of the components for the window.
      */
     private void createComponents() {
+        // Create first panel to house all of the fields for signing up.
         JPanel signUpPanel = new JPanel();
         GridBagLayout signUpLayout = new GridBagLayout();
         Border panelBorder = BorderFactory.createLineBorder(Color.BLACK);
@@ -67,13 +69,13 @@ public class SignUpWindow extends JFrame {
         signUpPanel.setBorder(panelBorder);
         GridBagConstraints gbc = new GridBagConstraints();
 
-        String[] names = new String[] { "First Name", "Last Name", "Username", 
-                                                                    "Password", 
-                                                                    "Phone Number", 
-                                                                    "Email", 
-                                                                    "State", 
-                                                                    "City", 
-                                                                    "ZIP" };
+        String[] names = new String[] { "First Name:", "Last Name:", "Username:", 
+                                                                    "Password:", 
+                                                                    "Phone Number:", 
+                                                                    "Email:", 
+                                                                    "State:", 
+                                                                    "City:", 
+                                                                    "ZIP:" };
         JLabel[] labels = new JLabel[9];
         JTextField[] fields = new JTextField[9];
         gbc.fill = GridBagConstraints.HORIZONTAL;   
@@ -92,6 +94,7 @@ public class SignUpWindow extends JFrame {
             signUpPanel.add(fields[i], gbc);
         }
 
+        // Create separate panel to house the buttons on the bottom.
         JPanel buttonPanel = new JPanel();
         FlowLayout buttonLayout = new FlowLayout(FlowLayout.CENTER);
         buttonPanel.setLayout(buttonLayout);
@@ -158,6 +161,7 @@ public class SignUpWindow extends JFrame {
         validCredentials[7] = credentials[7].getText().matches("([a-zA-Z]+|[a-zA-Z]+\\s[a-zA-Z]+)");
         validCredentials[8] = credentials[8].getText().length() == 5;
 
+        // Validation check on fields starting from first name.
         int index = 0;
         boolean signedUp = true;
         while (index < 9 && signedUp) {
@@ -197,18 +201,24 @@ public class SignUpWindow extends JFrame {
             }
             bank.addNewAccount(newAccount);
             JOptionPane.showMessageDialog(button, "New account created!");
+            for (int i = 0; i < 9; i++) {
+                credentials[i].setText("");
+            }
+            setVisible(false);
+            bank.manageWindows(1);
         }
         return signedIn;
     }
 
     /**
+     * Helper method to add functionality to the account creation buttons
+     * for checking accounts and savings accounts.
      * 
-     * 
-     * @param button
-     * @param userCredentials
-     * @param choice
-     * @param color
-     * @param labels
+     * @param button is the button whose functionality is being added.
+     * @param userCredentials is the collection of fields to be inspected.
+     * @param choice determines if the button is meant for checking or savings accounts.
+     * @param color is the color of the button.
+     * @param labels is the collection of labels for identifying each field.
      */
     private void addButtonListener(JButton button, 
                                     JTextField[] userCredentials, 

@@ -1,7 +1,7 @@
 import javax.swing.SwingUtilities;
 
 /**
- * Main launcher used for launching the bank application.
+ * Main launcher used to launch the bank application.
  */
 public class MainLauncher {
  
@@ -15,6 +15,19 @@ public class MainLauncher {
             @Override
             public void run() {
                 Bank bank = new Bank();
+                // A test account you can run to demonstrate some of 
+                // the application's functionalities.
+                
+                // Account testAccount = new CheckingAccount("John", 
+                //                                     "Doe", 
+                //                                     "jdoe05", 
+                //                                     "Password1!", 
+                //                                     "1234567890", 
+                //                                     "jdoe@mail.com", 
+                //                                     "CA, Sacramento 98467", 
+                //                                     0);
+                // bank.addNewAccount(testAccount);
+
                 System.out.println(String.format("%s is now running", bank.getTitle()));
             }
         });

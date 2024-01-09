@@ -19,7 +19,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 
 /**
- * The window that facilitates the interactions with the user
+ * Window that facilitates the interactions with the user
  * for logging in.
  * Users also have to option of switch over to signing up.
  */
@@ -35,7 +35,7 @@ public class LoginWindow extends JFrame {
      * 
      * @param bank is the main bank application using this window.
      */
-    public LoginWindow(Bank bank) {
+    protected LoginWindow(Bank bank) {
         this.bank = bank;
         init();
         createComponents();
@@ -59,7 +59,7 @@ public class LoginWindow extends JFrame {
      * Used to create the necessary components of the window.
      */
     private void createComponents() {
-        //
+        // Create the main panel for the window.
         JPanel loginPanel = new JPanel();
         GridBagLayout loginLayout = new GridBagLayout();
         loginPanel.setLayout(loginLayout);
@@ -112,7 +112,7 @@ public class LoginWindow extends JFrame {
             }
         });
 
-        // Create fonts for the components and add them to the window's main panel.
+        // Create fonts for the components for better visibility.
         Font mainText = new Font("serif", Font.PLAIN, 18);
         usernameLabel.setFont(mainText);
         usernameField.setFont(mainText);
@@ -122,6 +122,7 @@ public class LoginWindow extends JFrame {
         loginButton.setFont(buttonText);
         signUpButton.setFont(buttonText);
 
+        // Add the components to the panel in a grid bag configuration.
         gbc.fill = GridBagConstraints.HORIZONTAL;      
         gbc.gridx = 0;
         gbc.gridy = 0;
