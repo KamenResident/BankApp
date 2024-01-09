@@ -14,7 +14,7 @@ Must have Java SE 8 or higher to run.
 
 ### Installation
 
-1. Simply clone the repo.
+1. Clone the following repo:
 
    ```sh
    git clone https://github.com/KamenResident/BankApp.git
