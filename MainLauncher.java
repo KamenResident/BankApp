@@ -14,7 +14,7 @@ public class MainLauncher {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Bank bank = new Bank();
+                Bank bank = new Bank("BankApp");
                 // A test account you can run to demonstrate some of 
                 // the application's functionalities.
                 
@@ -24,7 +24,7 @@ public class MainLauncher {
                 //                                     "Password1!", 
                 //                                     "1234567890", 
                 //                                     "jdoe@mail.com", 
-                //                                     "CA, Sacramento 98467", 
+                //                                     "CA, Sacramento 98765", 
                 //                                     0);
                 // bank.addNewAccount(testAccount);
 

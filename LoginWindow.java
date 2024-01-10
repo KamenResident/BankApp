@@ -35,7 +35,8 @@ public class LoginWindow extends JFrame {
      * 
      * @param bank is the main bank application using this window.
      */
-    protected LoginWindow(Bank bank) {
+    protected LoginWindow(Bank bank, String title) {
+        super(title);
         this.bank = bank;
         init();
         createComponents();
@@ -44,8 +45,7 @@ public class LoginWindow extends JFrame {
     /**
      * Used to initialize the window.
      */
-    private void init() {
-        setTitle("Log In");
+    private void init() {       
         setResizable(false);
         setLocationRelativeTo(null);
         setSize(500, 500);
@@ -92,6 +92,8 @@ public class LoginWindow extends JFrame {
                 boolean loginSuccess = login(usernameField.getText(),
                                                 passwordField.getText());
                 if (loginSuccess) {
+                    usernameField.setText("");
+                    passwordField.setText("");
                     setVisible(false);
                     bank.setVisible(true);
                 } else {

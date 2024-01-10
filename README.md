@@ -39,4 +39,5 @@ For the sign up window, ensure that your password is longer than 6 characters an
   - [ ] Implement the withdraw and deposit features.
     - [ ] Add different restrictions depending on the account type (checking or savings).
   - [ ] Add unique functionality to the checking and savings accounts.
+- [ ] Create a local database for the application itself.
 

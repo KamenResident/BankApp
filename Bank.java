@@ -44,13 +44,14 @@ public class Bank extends JFrame {
     /**
      * Constructor for the banking program.
      */
-    public Bank() {
+    public Bank(String title) {
+        super(title);
         accounts = new ArrayList<Account>();
         uid = 0; 
         init();
         createComponents();
-        loginWindow = new LoginWindow(this);
-        signUpWindow = new SignUpWindow(this);
+        loginWindow = new LoginWindow(this, "Log In");
+        signUpWindow = new SignUpWindow(this, "Sign Up");
     }
 
     /**
