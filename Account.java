@@ -132,12 +132,15 @@ public class Account {
 
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
-        System.out.println("Deposited " + depositAmount);
     }
 
-    public void withdraw(double withdrawalAmount) {
-        this.balance -= withdrawalAmount;
-        System.out.println("Withdrew " + withdrawalAmount);
+    public boolean withdraw(double withdrawalAmount) {
+        boolean sufficientFunds = false;
+        if (withdrawalAmount <= this.balance) {
+            this.balance -= withdrawalAmount;
+            sufficientFunds = true;
+        }       
+        return sufficientFunds;
     }
 
     public String getTransactionHistory() {

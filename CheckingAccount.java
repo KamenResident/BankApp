@@ -1,7 +1,5 @@
 public class CheckingAccount extends Account {
 
-    private double overdraftLimit;
-
     public CheckingAccount(String firstName, String lastName, String username, 
                                                                 String password, 
                                                                 String phoneNumber, 
@@ -9,24 +7,6 @@ public class CheckingAccount extends Account {
                                                                 String address,
                                                                 int id) {
         super(firstName, lastName, username, password, phoneNumber, email, address, id);
-        overdraftLimit = 300;
-    }
-
-    public double getOverdraftLimit() {
-        return overdraftLimit;
-    }
-
-    public void setOverdraftLimit(double newLimit) {
-        overdraftLimit = newLimit;
-    }
-
-    public void withdraw(double withdrawAmount) {
-        if ((getBalance() - withdrawAmount) > overdraftLimit) {
-            setBalance(getBalance() - withdrawAmount);
-            System.out.println("Withdrew " + withdrawAmount);
-        } else {
-            System.out.println("Withdrawal amount exceeds overdraft limit.");
-        }
     }
 
     

@@ -18,15 +18,15 @@ public class MainLauncher {
                 // A test account you can run to demonstrate some of 
                 // the application's functionalities.
                 
-                // Account testAccount = new CheckingAccount("John", 
-                //                                     "Doe", 
-                //                                     "jdoe05", 
-                //                                     "Password1!", 
-                //                                     "1234567890", 
-                //                                     "jdoe@mail.com", 
-                //                                     "CA, Sacramento 98765", 
-                //                                     0);
-                // bank.addNewAccount(testAccount);
+                Account testAccount = new CheckingAccount("John", 
+                                                    "Doe", 
+                                                    "jdoe05", 
+                                                    "Password1!", 
+                                                    "1234567890", 
+                                                    "jdoe@mail.com", 
+                                                    "CA, Sacramento 98765", 
+                                                    0);
+                bank.addNewAccount(testAccount);
 
                 System.out.println(String.format("%s is now running", bank.getTitle()));
             }

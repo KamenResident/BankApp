@@ -1,14 +1,23 @@
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
@@ -62,20 +71,48 @@ public class Bank extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
         setLocationRelativeTo(null);
-        setResizable(false);       
+        setResizable(false); 
+        setVisible(false);      
     }
 
     /**
      * Create the necessary components for the application.
      */
     private void createComponents() {
-        JPanel mainPanel = new JPanel();
-        GroupLayout mainLayout = new GroupLayout(mainPanel);
+        JTabbedPane tabbedPane = new JTabbedPane();
+
+        JPanel mainPanel = new JPanel(new FlowLayout());
         mainPanel.setSize(1000, 1000);
-        mainPanel.setLayout(mainLayout);
         mainPanel.setOpaque(false);
-        mainLayout.setAutoCreateGaps(true);
-        mainLayout.setAutoCreateContainerGaps(true);        
+        
+        JPanel leftPanel = new JPanel();
+        BoxLayout leftLayout = new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS);
+        leftPanel.setLayout(leftLayout);
+        leftPanel.setPreferredSize(new Dimension(500, 750));
+
+        JLabel withdrawLabel = new JLabel("Withdraw", Label.CENTER);
+        JLabel depositLabel = new JLabel("Deposit", Label.CENTER);
+        JTextField withdrawField = new JTextField();
+        Action withdrawAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+            }
+        };
+        withdrawField.addActionListener(withdrawAction);
+        JTextField depositField = new JTextField();
+        Action depositAction = new AbstractAction() {
+           @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        };
+        depositField.addActionListener(depositAction);
+
+        tabbedPane.addTab("Main", mainPanel);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);     
+
+        add(tabbedPane);
     }
 
     /**
@@ -142,6 +179,14 @@ public class Bank extends JFrame {
 
         boolean ready = validLength && numbers && specialChars && upperCase && lowerCase;
         return ready;
+    }
+
+    private boolean withdraw(double withdrawAmount) {
+        boolean withdraw = false;
+        if (currentAccount.withdraw(withdrawAmount)) {
+            withdraw = true;
+        }
+        return withdraw;       
     }
 
     /**
