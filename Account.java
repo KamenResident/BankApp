@@ -1,5 +1,7 @@
 import java.util.Date;
 import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Account {
@@ -20,9 +22,13 @@ public class Account {
 
     private int id;
 
+    private int transactionCount;
+
     private double annualInterestRate;
 
     private Date dateOfCreation;
+
+    private SimpleDateFormat dateFormat;
 
     private List<Transaction> transactions;
 
@@ -37,6 +43,7 @@ public class Account {
         id = 0;
         annualInterestRate = 0;
         dateOfCreation = new Date();
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         transactions =  new ArrayList<Transaction>();
     }
 
@@ -55,6 +62,7 @@ public class Account {
         this.balance = 0;
         this.id = id;
         annualInterestRate = 0;
+        transactionCount = 0;
         transactions =  new ArrayList<Transaction>();
     }
 
@@ -118,6 +126,10 @@ public class Account {
         return balance * (getMonthlyInterestRate() / 100);
     }
 
+    public int getTransactionCount() {
+        return transactionCount;
+    }
+
     public Date getDateOfCreation() {
         return dateOfCreation;
     }
@@ -132,6 +144,11 @@ public class Account {
 
     public void deposit(double depositAmount) {
         this.balance += depositAmount;
+        Transaction depositTransaction = new Transaction("Deposit", 
+                                                            depositAmount, 
+                                                            LocalDateTime.now());
+        transactions.add(depositTransaction);
+        transactionCount++;
     }
 
     public boolean withdraw(double withdrawalAmount) {
@@ -139,6 +156,11 @@ public class Account {
         if (withdrawalAmount <= this.balance) {
             this.balance -= withdrawalAmount;
             sufficientFunds = true;
+            Transaction withdrawTransaction = new Transaction("Withdraw", 
+                                                                withdrawalAmount,
+                                                                LocalDateTime.now());
+            transactions.add(withdrawTransaction);
+            transactionCount++;
         }       
         return sufficientFunds;
     }
@@ -158,6 +180,5 @@ public class Account {
         }
         return history;
     }
-
 
 }

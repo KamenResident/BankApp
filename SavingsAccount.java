@@ -2,9 +2,9 @@ public class SavingsAccount extends Account {
 
     private double overdraftLimit;
 
-    private int withdrawCount;
-
     private boolean activeState;
+
+    private String errorMessage;
     
     public SavingsAccount() {
         super();
@@ -17,17 +17,25 @@ public class SavingsAccount extends Account {
                                                                 String address, 
                                                                 int id) {
         super(firstName, lastName, username, password, phoneNumber, email, address, id);
-        withdrawCount = 0;
         activeState = false;
     }
 
     public boolean withdraw(double withdrawalFunds) {
         boolean sufficientFunds = false;
-        if (super.withdraw(withdrawalFunds) && withdrawalFunds <= overdraftLimit) {
+        if (super.withdraw(withdrawalFunds) && withdrawalFunds <= overdraftLimit && activeState) {
             sufficientFunds = true;
-            withdrawCount++;
         }
+        if (activeState) {
+        }
+
         return sufficientFunds;
+    }
+
+    public void deposit(double depositAmount) {
+        super.deposit(depositAmount);
+        if (super.getBalance() >= 20) {
+            activeState = true;
+        }
     }
 
     public boolean getActiveState() {
@@ -41,5 +49,8 @@ public class SavingsAccount extends Account {
     public void setOverdraftLimit(double newLimit) {
         overdraftLimit = newLimit;
     }
-    
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 }

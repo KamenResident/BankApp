@@ -96,7 +96,13 @@ public class Bank extends JFrame {
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                double withdrawAmount = Double.parseDouble(withdrawField.getText());
+                boolean withdrawSuccess = currentAccount.withdraw(withdrawAmount);
+                if (withdrawSuccess) {
+                    JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
+                } else if (currentAccount instanceof SavingsAccount) {
+                    
+                }
             }
         };
         withdrawField.addActionListener(withdrawAction);
@@ -104,7 +110,8 @@ public class Bank extends JFrame {
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
-
+                currentAccount.deposit(Double.parseDouble(depositField.getText()));
+                JOptionPane.showMessageDialog(depositField, "Deposit successful!");
             }
         };
         depositField.addActionListener(depositAction);

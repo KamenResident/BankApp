@@ -188,7 +188,7 @@ public class SignUpWindow extends JFrame {
         if (signedUp) {
             Account newAccount;
             if (choice == 0) {
-                newAccount = new CheckingAccount(fields[0].getText(),
+                newAccount = new Account(fields[0].getText(),
                                             fields[1].getText(),
                                             fields[2].getText(), 
                                             fields[3].getText(), 

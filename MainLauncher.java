@@ -18,7 +18,7 @@ public class MainLauncher {
                 // A test account you can run to demonstrate some of 
                 // the application's functionalities.
                 
-                Account testAccount = new CheckingAccount("John", 
+                Account testAccount = new Account("John", 
                                                     "Doe", 
                                                     "jdoe05", 
                                                     "Password1!", 
