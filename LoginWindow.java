@@ -25,9 +25,6 @@ import javax.swing.border.Border;
  */
 public class LoginWindow extends JFrame {
 
-    /**
-     * Represents the bank application using this window.
-     */
     private Bank bank;
 
     /**
@@ -42,9 +39,6 @@ public class LoginWindow extends JFrame {
         createComponents();
     }
 
-    /**
-     * Used to initialize the window.
-     */
     private void init() {       
         setResizable(false);
         setLocationRelativeTo(null);
@@ -55,9 +49,6 @@ public class LoginWindow extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Used to create the necessary components of the window.
-     */
     private void createComponents() {
         // Create the main panel for the window.
         JPanel loginPanel = new JPanel();
@@ -155,13 +146,6 @@ public class LoginWindow extends JFrame {
         add(loginPanel);
     }
 
-    /**
-     * Used for properly logging in registered users.
-     * 
-     * @param username is the user's username.
-     * @param password is the user's password.
-     * @return true if login is successful, false otherwise.
-     */
     private boolean login(String username, String password) {       
         int index = 0;
         boolean found = false;

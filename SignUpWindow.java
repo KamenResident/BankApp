@@ -25,19 +25,8 @@ import javax.swing.border.Border;
  */
 public class SignUpWindow extends JFrame {
 
-    /**
-     * The primary bank application.
-     */
     private Bank bank;
-
-    /**
-     * A collection of labels for each of the input fields
-     */
     private JLabel[] labels;
-
-    /**
-     * A collection of input fields for the user to enter their credentials.
-     */
     private JTextField[] fields;
 
     /**
@@ -54,9 +43,6 @@ public class SignUpWindow extends JFrame {
         createComponents();
     }
 
-    /**
-     * Used to initialize the window for setup.
-     */
     private void init() {
         setTitle("Sign Up");
         setResizable(false);
@@ -68,9 +54,6 @@ public class SignUpWindow extends JFrame {
         setVisible(false);
     }
 
-    /**
-     * Used to create all of the components for the window.
-     */
     private void createComponents() {
         // Create first panel to house all of the fields for signing up.
         JPanel signUpPanel = new JPanel();

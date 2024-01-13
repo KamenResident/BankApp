@@ -1,15 +1,30 @@
+/**
+ * 
+ */
 public class SavingsAccount extends Account {
 
-    private double overdraftLimit;
-
     private boolean activeState;
-
     private String errorMessage;
-    
+   
+    /**
+     * 
+     */
     public SavingsAccount() {
         super();
     }
 
+    /**
+     * 
+     * 
+     * @param firstName
+     * @param lastName
+     * @param username
+     * @param password
+     * @param phoneNumber
+     * @param email
+     * @param address
+     * @param id
+     */
     public SavingsAccount(String firstName, String lastName, String username, 
                                                                 String password, 
                                                                 String phoneNumber, 
@@ -20,17 +35,25 @@ public class SavingsAccount extends Account {
         activeState = false;
     }
 
+    /**
+     * 
+     * 
+     * @param
+     */
     public boolean withdraw(double withdrawalFunds) {
         boolean sufficientFunds = false;
-        if (super.withdraw(withdrawalFunds) && withdrawalFunds <= overdraftLimit && activeState) {
+        if (super.withdraw(withdrawalFunds) && activeState) {
             sufficientFunds = true;
-        }
-        if (activeState) {
         }
 
         return sufficientFunds;
     }
 
+    /**
+     * 
+     * 
+     * @param
+     */
     public void deposit(double depositAmount) {
         super.deposit(depositAmount);
         if (super.getBalance() >= 20) {
@@ -40,14 +63,6 @@ public class SavingsAccount extends Account {
 
     public boolean getActiveState() {
         return activeState;
-    }
-
-    public double getOverdraftLimit() {
-        return overdraftLimit;
-    }
-
-    public void setOverdraftLimit(double newLimit) {
-        overdraftLimit = newLimit;
     }
 
     public String getErrorMessage() {

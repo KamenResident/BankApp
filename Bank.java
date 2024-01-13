@@ -25,29 +25,10 @@ import javax.swing.JTextField;
  */
 public class Bank extends JFrame {
 
-    /**
-     * List of all registered accounts.
-     */
     private List<Account> accounts;
-
-    /**
-     * The account that is currently logged in.
-     */
     private Account currentAccount;
-
-    /**
-     * Unique user ID for each new account created.
-     */
     private int uid;
-
-    /**
-     * Window used for handling logins.
-     */
     private LoginWindow loginWindow;
-
-    /**
-     * Window used for handling sign ups.
-     */
     private SignUpWindow signUpWindow;
 
     /**
@@ -63,9 +44,6 @@ public class Bank extends JFrame {
         signUpWindow = new SignUpWindow(this, "Sign Up");
     }
 
-    /**
-     * Used to initialize the application's elements.
-     */
     private void init() {
         setTitle("BankApp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -75,9 +53,6 @@ public class Bank extends JFrame {
         setVisible(false);      
     }
 
-    /**
-     * Create the necessary components for the application.
-     */
     private void createComponents() {
         JTabbedPane tabbedPane = new JTabbedPane();
 

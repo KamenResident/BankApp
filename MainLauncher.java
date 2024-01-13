@@ -15,7 +15,7 @@ public class MainLauncher {
             @Override
             public void run() {
                 Bank bank = new Bank("BankApp");
-                // A test account you can run to demonstrate some of 
+                // A test account that can be used to demonstrate some of 
                 // the application's functionalities.
                 
                 Account testAccount = new Account("John", 
