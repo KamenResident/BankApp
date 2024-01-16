@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -11,7 +13,6 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -58,15 +59,30 @@ public class Bank extends JFrame {
 
         JPanel mainPanel = new JPanel(new FlowLayout());
         mainPanel.setSize(1000, 1000);
-        mainPanel.setOpaque(false);
-        
+        mainPanel.setOpaque(false);        
+        Dimension sidePanelDimension = new Dimension(450, 750);      
+
+        JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
+        JPanel rightPanel = createRightMainPanel(sidePanelDimension);
+
+        mainPanel.add(leftPanel);
+        mainPanel.add(rightPanel);
+
+        tabbedPane.addTab("Main", mainPanel);
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);     
+
+        add(tabbedPane);
+    }
+
+    private JPanel createLeftMainPanel(Dimension panelDimension) {
         JPanel leftPanel = new JPanel();
         BoxLayout leftLayout = new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS);
         leftPanel.setLayout(leftLayout);
-        leftPanel.setPreferredSize(new Dimension(500, 750));
+        leftPanel.setPreferredSize(panelDimension);
+        leftPanel.setBackground(Color.YELLOW);
 
-        JLabel withdrawLabel = new JLabel("Withdraw", Label.CENTER);
-        JLabel depositLabel = new JLabel("Deposit", Label.CENTER);
+        JLabel withdrawLabel = new JLabel("Withdraw");
+        JLabel depositLabel = new JLabel("Deposit");
         JTextField withdrawField = new JTextField();
         Action withdrawAction = new AbstractAction() {
             @Override
@@ -91,10 +107,58 @@ public class Bank extends JFrame {
         };
         depositField.addActionListener(depositAction);
 
-        tabbedPane.addTab("Main", mainPanel);
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);     
+        leftPanel.add(withdrawLabel);
+        leftPanel.add(withdrawField);
+        leftPanel.add(depositLabel);
+        leftPanel.add(depositField);
 
-        add(tabbedPane);
+        return leftPanel;
+    }
+
+    private JPanel createRightMainPanel(Dimension panelDimension) {
+        JPanel rightPanel = new JPanel();
+        BoxLayout rightLayout = new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS);
+        rightPanel.setLayout(rightLayout);
+        rightPanel.setPreferredSize(panelDimension);
+        rightPanel.setBackground(Color.GREEN);
+
+        JLabel transferLabel = new JLabel("Enter recipient's username for transfer:");
+        JTextField transferField = new JTextField();
+        Action transferAction = new AbstractAction () {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Account recipient = findAccount(transferField.getText());
+                if (recipient != null) {
+                    String transfer = JOptionPane.showInputDialog("Enter amount to transfer");
+                    double transferAmount = Double.parseDouble(transfer);
+                    if (moneyTransfer(currentAccount, recipient, transferAmount)) {
+                        JOptionPane.showMessageDialog(null, "Transfer successful!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Insufficient funds");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(transferField, "Cannot find user.");
+                }               
+            }
+        };
+        transferField.addActionListener(transferAction);
+
+        JLabel statementLabel = new JLabel("View Bank Statement");
+        JButton statementButton = new JButton("Generate");
+        statementButton.setForeground(Color.CYAN);
+        statementButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(statementButton, currentAccount.getTransactionHistory());
+            }
+        });
+       
+        rightPanel.add(transferLabel);
+        rightPanel.add(transferField);
+        rightPanel.add(statementLabel);
+        rightPanel.add(statementButton);
+
+        return rightPanel;
     }
 
     /**
@@ -120,6 +184,23 @@ public class Bank extends JFrame {
         }
         return found;
 
+    }
+
+    private Account findAccount(String username) {
+        Account searchedAccount = null;
+        boolean found = false;
+        int i = 0;
+        if (!accounts.isEmpty() && username.length() > 5) {
+            while (!found && i < accounts.size()) {
+                if (accounts.get(i).getUsername().compareTo(username) == 0) {
+                    found = true;
+                    searchedAccount = accounts.get(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+        return searchedAccount;
     }
 
     /**
@@ -163,14 +244,6 @@ public class Bank extends JFrame {
         return ready;
     }
 
-    private boolean withdraw(double withdrawAmount) {
-        boolean withdraw = false;
-        if (currentAccount.withdraw(withdrawAmount)) {
-            withdraw = true;
-        }
-        return withdraw;       
-    }
-
     /**
      * Used to help transfer money between two accounts.
      * 
@@ -181,9 +254,9 @@ public class Bank extends JFrame {
      */
     private boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
         boolean sufficientFunds = false;
-        if (sender.getBalance() >= transferAmount) {
-            recipient.setBalance(recipient.getBalance() + transferAmount);
-            sender.setBalance(sender.getBalance() - transferAmount);
+        if (sender.getBalance() > transferAmount) {
+            recipient.deposit(transferAmount);
+            sender.withdraw(transferAmount);
             sufficientFunds = true;
         }
 

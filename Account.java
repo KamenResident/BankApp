@@ -217,6 +217,7 @@ public class Account {
         StringBuilder sb = new StringBuilder();
         String history;
         if (!transactions.isEmpty()) {
+            sb.append(name + "\n");
             sb.append("Type  :  Amount  :  Date\n");
             for (int i = 0; i < transactions.size(); i++) {
                 sb.append(transactions.get(i).toString());
@@ -224,7 +225,7 @@ public class Account {
             }
             history = sb.toString();
         } else {
-            history = "You have made no transactions yet.";
+            history = "No transactions made yet.";
         }
         return history;
     }

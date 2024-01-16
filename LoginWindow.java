@@ -51,9 +51,7 @@ public class LoginWindow extends JFrame {
 
     private void createComponents() {
         // Create the main panel for the window.
-        JPanel loginPanel = new JPanel();
-        GridBagLayout loginLayout = new GridBagLayout();
-        loginPanel.setLayout(loginLayout);
+        JPanel loginPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         Border panelBorder = BorderFactory.createLineBorder(Color.BLACK);
         loginPanel.setBackground(Color.YELLOW);

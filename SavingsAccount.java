@@ -1,5 +1,5 @@
 /**
- * 
+ * Represents a savings account for a bank.
  */
 public class SavingsAccount extends Account {
 
@@ -7,14 +7,14 @@ public class SavingsAccount extends Account {
     private String errorMessage;
    
     /**
-     * 
+     * Parameter-less constructor for a savings account.
      */
     public SavingsAccount() {
         super();
     }
 
     /**
-     * 
+     * Paramterized constructor for a savings account.
      * 
      * @param firstName
      * @param lastName

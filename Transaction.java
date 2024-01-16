@@ -13,9 +13,9 @@ public class Transaction {
     /**
      * Constructor for a transaction.
      * 
-     * @param transactionType
-     * @param transactionAmount
-     * @param dateOfTransaction
+     * @param transactionType is the type of transaction being made.
+     * @param transactionAmount is the amount of money involved in the transaction.
+     * @param dateOfTransaction is the date of when the transaction was made.
      */
     public Transaction(String transactionType, double transactionAmount, LocalDateTime dateOfTransaction) {
         this.transactionType = transactionType;
@@ -35,9 +35,17 @@ public class Transaction {
         return dateOfTransaction;
     }
 
+    /**
+     * Returns the transaction's information by listing its type,
+     * amount, and date.
+     * 
+     * @return the transaction's information.
+     */
     @Override
     public String toString() {
-        return transactionType + " : " + transactionAmount + " : " + dateOfTransaction;
+        return String.format("%s : %s : %s", transactionType, 
+                                                    transactionAmount, 
+                                                    dateOfTransaction);
     }
     
 }

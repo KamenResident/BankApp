@@ -56,12 +56,9 @@ public class SignUpWindow extends JFrame {
 
     private void createComponents() {
         // Create first panel to house all of the fields for signing up.
-        JPanel signUpPanel = new JPanel();
-        GridBagLayout signUpLayout = new GridBagLayout();
+        JPanel signUpPanel = new JPanel(new GridBagLayout());
         Border panelBorder = BorderFactory.createLineBorder(Color.BLACK);
-        signUpPanel.setLayout(signUpLayout);
-        signUpPanel.
-        setMaximumSize(new Dimension(350,  350));
+        signUpPanel.setMaximumSize(new Dimension(350,  350));
         signUpPanel.setBackground(Color.YELLOW);
         signUpPanel.setBorder(panelBorder);
         GridBagConstraints gbc = new GridBagConstraints();
