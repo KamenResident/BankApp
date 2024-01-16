@@ -34,10 +34,11 @@ For the sign up window, ensure that your password is longer than 6 characters an
 
 - [x] Implement the log in window, and its UI and features.
 - [x] Implement the sign up window, and its UI and features.
-- [ ] Implement the main banking application's window and its UI.
-  - [ ] Add the feature for transferring money between two accounts.
-  - [ ] Implement the withdraw and deposit features.
+- [x] Implement the main banking application's window and its UI.
+  - [x] Add the feature for transferring money between two accounts.
+  - [x] Implement the withdraw and deposit features.
     - [ ] Add different restrictions depending on the account type (checking or savings).
   - [ ] Add unique functionality to the checking and savings accounts.
+  - [ ] Add another tab for viewing the current user's profile.
 - [ ] Create a local database for the application itself.
 

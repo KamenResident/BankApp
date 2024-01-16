@@ -1,12 +1,11 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +42,7 @@ public class Bank extends JFrame {
         createComponents();
         loginWindow = new LoginWindow(this, "Log In");
         signUpWindow = new SignUpWindow(this, "Sign Up");
+        currentAccount = null;
     }
 
     private void init() {
@@ -57,16 +57,33 @@ public class Bank extends JFrame {
     private void createComponents() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JPanel mainPanel = new JPanel(new FlowLayout());
-        mainPanel.setSize(1000, 1000);
-        mainPanel.setOpaque(false);        
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setPreferredSize(new Dimension(950, 950));
+        // mainPanel.setOpaque(false);     
         Dimension sidePanelDimension = new Dimension(450, 750);      
 
         JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
         JPanel rightPanel = createRightMainPanel(sidePanelDimension);
 
-        mainPanel.add(leftPanel);
-        mainPanel.add(rightPanel);
+        JPanel bottomPanel = new JPanel(new FlowLayout());
+        bottomPanel.setPreferredSize(new Dimension(900, 200));
+        bottomPanel.setBackground(Color.PINK);
+        JButton logoutButton = new JButton("Log out");
+        logoutButton.setBackground(Color.RED);
+        logoutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                currentAccount = null;
+                setVisible(false);
+                manageWindows(1);
+            }
+        });
+        logoutButton.setPreferredSize(new Dimension(100, 30));
+        bottomPanel.add(logoutButton);
+
+        mainPanel.add(leftPanel, BorderLayout.WEST);
+        mainPanel.add(rightPanel, BorderLayout.EAST);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         tabbedPane.addTab("Main", mainPanel);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);     
@@ -81,9 +98,13 @@ public class Bank extends JFrame {
         leftPanel.setPreferredSize(panelDimension);
         leftPanel.setBackground(Color.YELLOW);
 
+        Dimension compSize = new Dimension(200, 30);
         JLabel withdrawLabel = new JLabel("Withdraw");
+        withdrawLabel.setPreferredSize(compSize);
         JLabel depositLabel = new JLabel("Deposit");
+        depositLabel.setPreferredSize(compSize);
         JTextField withdrawField = new JTextField();
+        withdrawField.setPreferredSize(compSize);
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -91,13 +112,14 @@ public class Bank extends JFrame {
                 boolean withdrawSuccess = currentAccount.withdraw(withdrawAmount);
                 if (withdrawSuccess) {
                     JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
-                } else if (currentAccount instanceof SavingsAccount) {
-                    
+                } else {
+                    JOptionPane.showMessageDialog(withdrawField, "Insufficient funds. Withdraw failed");
                 }
             }
         };
         withdrawField.addActionListener(withdrawAction);
         JTextField depositField = new JTextField();
+        depositField.setPreferredSize(compSize);
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
@@ -122,7 +144,9 @@ public class Bank extends JFrame {
         rightPanel.setPreferredSize(panelDimension);
         rightPanel.setBackground(Color.GREEN);
 
+        Dimension compSize = new Dimension(200, 30);
         JLabel transferLabel = new JLabel("Enter recipient's username for transfer:");
+        transferLabel.setPreferredSize(compSize);
         JTextField transferField = new JTextField();
         Action transferAction = new AbstractAction () {
             @Override
@@ -134,7 +158,7 @@ public class Bank extends JFrame {
                     if (moneyTransfer(currentAccount, recipient, transferAmount)) {
                         JOptionPane.showMessageDialog(null, "Transfer successful!");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Insufficient funds");
+                        JOptionPane.showMessageDialog(null, "Insufficient funds. Transfer failed.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(transferField, "Cannot find user.");
@@ -142,10 +166,13 @@ public class Bank extends JFrame {
             }
         };
         transferField.addActionListener(transferAction);
+        transferField.setPreferredSize(compSize);
 
         JLabel statementLabel = new JLabel("View Bank Statement");
+        statementLabel.setPreferredSize(compSize);
         JButton statementButton = new JButton("Generate");
-        statementButton.setForeground(Color.CYAN);
+        statementButton.setPreferredSize(new Dimension(100, 30));
+        statementButton.setBackground(Color.CYAN);
         statementButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -254,30 +281,22 @@ public class Bank extends JFrame {
      */
     private boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
         boolean sufficientFunds = false;
-        if (sender.getBalance() > transferAmount) {
+        if (sender.getBalance() > transferAmount && sender.withdraw(transferAmount)) {
             recipient.deposit(transferAmount);
-            sender.withdraw(transferAmount);
+            Transaction transferTransaction = new Transaction("Transfer", 
+                                                                transferAmount, 
+                                                                LocalDateTime.now());
+            currentAccount.addTransaction(transferTransaction);
             sufficientFunds = true;
         }
 
         return sufficientFunds;
     }
 
-    /**
-     * Used to set the current account that is logged in.
-     * 
-     * @param user is the account that is logged in.
-     */
     protected void setCurrentAccount(Account user) {
         currentAccount = user;
     }
 
-    /**
-     * Used to add a new account for the application upon successful
-     * sign up.
-     * 
-     * @param newAccount is the new account being registered.
-     */
     protected void addNewAccount(Account newAccount) {
         accounts.add(newAccount);
     }
@@ -291,20 +310,10 @@ public class Bank extends JFrame {
         return uid++;
     }
 
-    /**
-     * Retrieves the list of currently registered accounts.
-     * 
-     * @return the list of currently registered accounts.
-     */
     protected List<Account> getAccounts() {
         return accounts;
     }
 
-    /**
-     * Retrieves the current account that is logged in.
-     * 
-     * @return the account currently logged in.
-     */
     protected Account getCurrentAccount() {
         return currentAccount;
     }

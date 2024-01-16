@@ -140,7 +140,7 @@ public class Account {
      * Retrieves the monthly interest rate based on the
      * annual interest rate.
      * 
-     * @return
+     * @return the monthly interest rate.
      */
     public double getMonthlyInterestRate() {
         return annualInterestRate / 12;
