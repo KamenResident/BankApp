@@ -1,6 +1,5 @@
 import java.util.Date;
 import java.util.List;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -20,6 +19,7 @@ public class Account {
     private int id;
     private int transactionCount;
     private double annualInterestRate;
+    private double totalInterest;
     private Date dateOfCreation;
     private List<Transaction> transactions;
     private boolean exceedLimit;
@@ -38,6 +38,7 @@ public class Account {
         id = 0;
         overdraftLimit = 50;
         annualInterestRate = 0;
+        totalInterest = 0;
         dateOfCreation = new Date();
         transactions =  new ArrayList<Transaction>();
         exceedLimit = false;
@@ -104,6 +105,10 @@ public class Account {
         return overdraftLimit;
     }
 
+    public double getTotalInterest() {
+        return totalInterest;
+    }
+
     public boolean getExceedLimit() {
         return exceedLimit;
     }
@@ -147,12 +152,12 @@ public class Account {
     }
 
     /**
-     * Retrieves the monthly interest based on the monthly interest rate.
-     * 
-     * @return the monthly interest.
+     * Calculates the accumulation of the account owner's monthly interest.
      */
-    public double getMonthlyInterest() {
-        return balance * (getMonthlyInterestRate() / 100);
+    public void accrueMonthlyInterest() {
+        double monthlyInterest = balance * getMonthlyInterestRate();
+        totalInterest += monthlyInterest;
+        balance += monthlyInterest;
     }
 
     public int getTransactionCount() {
@@ -171,13 +176,35 @@ public class Account {
         return transactions;
     }
 
-    public void deposit(double depositAmount) {
-        this.balance += depositAmount;
-        Transaction depositTransaction = new Transaction("Deposit", 
+    /**
+     * Used to deposit money into the account owner's balance.
+     * As long as the amount is greater than $0, the deposit will be processed.
+     * However, if the owner has exceeded the overdraft limit, then a $25
+     * penalty fee will be applied until their balance is under the limit.
+     * 
+     * @param depositAmount is the amount of money being deposited.
+     * @return true if the deposit is successful, false otherwise.
+     */
+    public boolean deposit(double depositAmount) {
+        boolean depositSuccess = false;
+        if (exceedLimit) {
+            depositAmount -= 25;
+        }
+
+        if (depositAmount > 0) {
+            depositSuccess = true;           
+            this.balance += depositAmount;
+            Transaction depositTransaction = new Transaction("Deposit", 
                                                             depositAmount, 
                                                             LocalDateTime.now());
-        transactions.add(depositTransaction);
-        transactionCount++;
+            transactions.add(depositTransaction);
+            transactionCount++;
+            if (this.balance > overdraftLimit) {
+                exceedLimit = false;
+            }
+        }
+
+        return depositSuccess;
     }
 
     /**
@@ -191,7 +218,7 @@ public class Account {
     public boolean withdraw(double withdrawalAmount) {
         boolean sufficientFunds = false;
         double difference = this.balance - withdrawalAmount;
-        if (withdrawalAmount < this.balance && difference > overdraftLimit) {
+        if (withdrawalAmount > 0 && withdrawalAmount < this.balance && !exceedLimit) {
             this.balance -= withdrawalAmount;
             sufficientFunds = true;
             Transaction withdrawTransaction = new Transaction("Withdraw", 
@@ -199,7 +226,9 @@ public class Account {
                                                                 LocalDateTime.now());
             transactions.add(withdrawTransaction);
             transactionCount++;
-        } else if (difference <= overdraftLimit) {
+        }
+        
+        if (difference <= overdraftLimit) {
             exceedLimit = true;
         }   
 

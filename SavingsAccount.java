@@ -65,12 +65,18 @@ public class SavingsAccount extends Account {
      * 
      * @param depositAmount is the amount of money being deposited.
      */
-    public void deposit(double depositAmount) {
-        super.deposit(depositAmount);
+    public boolean deposit(double depositAmount) {
+        boolean depositSuccess = false;
+        if (super.deposit(depositAmount)) {
+            depositSuccess = true;
+        }
+
         if (super.getBalance() >= 20 && !activeState) {
             activeState = true;
             JOptionPane.showMessageDialog(null, "Account is now active.");
         }
+
+        return depositSuccess;
     }
 
     /**

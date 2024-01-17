@@ -10,7 +10,8 @@ An application used to simulate a basic banking system that keeps track of its u
 
 ### Prerequisite
 
-Must have Java SE 8 or higher to run.
+* Must have Java SE 8 or higher to run.
+* An IDE ready to use.
 
 ### Installation
 
@@ -19,6 +20,8 @@ Must have Java SE 8 or higher to run.
    ```sh
    git clone https://github.com/KamenResident/BankApp.git
    ```
+
+2. Then run the application in the IDE of your choice from MainLauncher.java.
 
 ## Usage
 
@@ -37,8 +40,9 @@ For the sign up window, ensure that your password is longer than 6 characters an
 - [x] Implement the main banking application's window and its UI.
   - [x] Add the feature for transferring money between two accounts.
   - [x] Implement the withdraw and deposit features.
-    - [ ] Add different restrictions depending on the account type (checking or savings).
-  - [ ] Add unique functionality to the checking and savings accounts.
+    - [x] Add different restrictions depending on the account type (checking or savings).
+  - [x] Add unique functionality to the checking and savings accounts.
   - [ ] Add another tab for viewing the current user's profile.
+- [ ] Change data type for money to BigDecimal for the entire application.
 - [ ] Create a local database for the application itself.
 

@@ -108,9 +108,7 @@ public class Bank extends JFrame {
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                double withdrawAmount = Double.parseDouble(withdrawField.getText());
-                boolean withdrawSuccess = currentAccount.withdraw(withdrawAmount);
-                if (withdrawSuccess) {
+                if (currentAccount.withdraw(Double.parseDouble(withdrawField.getText()))) {
                     JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
                 } else {
                     JOptionPane.showMessageDialog(withdrawField, "Insufficient funds. Withdraw failed");
@@ -123,8 +121,11 @@ public class Bank extends JFrame {
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
-                currentAccount.deposit(Double.parseDouble(depositField.getText()));
-                JOptionPane.showMessageDialog(depositField, "Deposit successful!");
+                if (currentAccount.deposit(Double.parseDouble(depositField.getText()))) {
+                    JOptionPane.showMessageDialog(depositField, "Deposit successful!");
+                } else {
+                    JOptionPane.showMessageDialog(depositField, "Invalid funds. Deposit failed.");
+                }                
             }
         };
         depositField.addActionListener(depositAction);
