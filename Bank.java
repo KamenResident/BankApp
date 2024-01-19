@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -48,7 +50,7 @@ public class Bank extends JFrame {
     private void init() {
         setTitle("BankApp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 1000);
+        setSize(500, 500);
         setLocationRelativeTo(null);
         setResizable(false); 
         setVisible(false);      
@@ -58,15 +60,15 @@ public class Bank extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setPreferredSize(new Dimension(950, 950));
+        mainPanel.setPreferredSize(new Dimension(450, 450));
         // mainPanel.setOpaque(false);     
-        Dimension sidePanelDimension = new Dimension(450, 750);      
+        Dimension sidePanelDimension = new Dimension(200, 300);      
 
         JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
         JPanel rightPanel = createRightMainPanel(sidePanelDimension);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
-        bottomPanel.setPreferredSize(new Dimension(900, 200));
+        bottomPanel.setPreferredSize(new Dimension(450, 50));
         bottomPanel.setBackground(Color.PINK);
         JButton logoutButton = new JButton("Log out");
         logoutButton.setBackground(Color.RED);
@@ -85,10 +87,20 @@ public class Bank extends JFrame {
         mainPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
+        JPanel profilePanel = createProfilePanel();
+
         tabbedPane.addTab("Main", mainPanel);
-        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);     
+        tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+        tabbedPane.addTab("Profile", profilePanel);
+        tabbedPane.setMnemonicAt(1, KeyEvent.VK_1);     
 
         add(tabbedPane);
+    }
+
+    private JPanel createProfilePanel() {
+        JPanel profilePanel = new JPanel();
+        profilePanel.setPreferredSize(new Dimension(450, 450));
+        return profilePanel;
     }
 
     private JPanel createLeftMainPanel(Dimension panelDimension) {
@@ -98,13 +110,13 @@ public class Bank extends JFrame {
         leftPanel.setPreferredSize(panelDimension);
         leftPanel.setBackground(Color.YELLOW);
 
-        Dimension compSize = new Dimension(200, 30);
+        Dimension compSize = new Dimension(300, 30);
         JLabel withdrawLabel = new JLabel("Withdraw");
         withdrawLabel.setPreferredSize(compSize);
         JLabel depositLabel = new JLabel("Deposit");
         depositLabel.setPreferredSize(compSize);
         JTextField withdrawField = new JTextField();
-        withdrawField.setPreferredSize(compSize);
+        withdrawField.setMaximumSize(compSize);
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -117,7 +129,7 @@ public class Bank extends JFrame {
         };
         withdrawField.addActionListener(withdrawAction);
         JTextField depositField = new JTextField();
-        depositField.setPreferredSize(compSize);
+        depositField.setMaximumSize(compSize);
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
@@ -145,8 +157,8 @@ public class Bank extends JFrame {
         rightPanel.setPreferredSize(panelDimension);
         rightPanel.setBackground(Color.GREEN);
 
-        Dimension compSize = new Dimension(200, 30);
-        JLabel transferLabel = new JLabel("Enter recipient's username for transfer:");
+        Dimension compSize = new Dimension(300, 30);
+        JLabel transferLabel = new JLabel("Transfer (Enter username)");
         transferLabel.setPreferredSize(compSize);
         JTextField transferField = new JTextField();
         Action transferAction = new AbstractAction () {
@@ -157,9 +169,9 @@ public class Bank extends JFrame {
                     String transfer = JOptionPane.showInputDialog("Enter amount to transfer");
                     double transferAmount = Double.parseDouble(transfer);
                     if (moneyTransfer(currentAccount, recipient, transferAmount)) {
-                        JOptionPane.showMessageDialog(null, "Transfer successful!");
+                        JOptionPane.showMessageDialog(transferField, "Transfer successful!");
                     } else {
-                        JOptionPane.showMessageDialog(null, "Insufficient funds. Transfer failed.");
+                        JOptionPane.showMessageDialog(transferField, "Insufficient funds. Transfer failed.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(transferField, "Cannot find user.");
@@ -167,7 +179,7 @@ public class Bank extends JFrame {
             }
         };
         transferField.addActionListener(transferAction);
-        transferField.setPreferredSize(compSize);
+        transferField.setMaximumSize(compSize);
 
         JLabel statementLabel = new JLabel("View Bank Statement");
         statementLabel.setPreferredSize(compSize);
@@ -267,8 +279,8 @@ public class Bank extends JFrame {
                 }
             }
         }
-
         boolean ready = validLength && numbers && specialChars && upperCase && lowerCase;
+
         return ready;
     }
 
