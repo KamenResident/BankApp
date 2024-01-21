@@ -125,7 +125,7 @@ public class Account {
         return this.address;
     }
 
-    public int getId() {
+    public int getID() {
         return this.id;
     }
 
@@ -218,7 +218,7 @@ public class Account {
     public boolean withdraw(double withdrawalAmount) {
         boolean sufficientFunds = false;
         double difference = this.balance - withdrawalAmount;
-        if (withdrawalAmount > 0 && withdrawalAmount < this.balance && !exceedLimit) {
+        if (withdrawalAmount > 0 && !exceedLimit) {
             this.balance -= withdrawalAmount;
             sufficientFunds = true;
             Transaction withdrawTransaction = new Transaction("Withdraw", 

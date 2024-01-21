@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -32,6 +33,7 @@ public class Bank extends JFrame {
     private int uid;
     private LoginWindow loginWindow;
     private SignUpWindow signUpWindow;
+    private JPanel profilePanel;
 
     /**
      * Constructor for the banking program.
@@ -41,16 +43,17 @@ public class Bank extends JFrame {
         accounts = new ArrayList<Account>();
         uid = 0; 
         init();
+        profilePanel = null;
         createComponents();
         loginWindow = new LoginWindow(this, "Log In");
         signUpWindow = new SignUpWindow(this, "Sign Up");
-        currentAccount = null;
+        currentAccount = null;        
     }
 
     private void init() {
         setTitle("BankApp");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
+        setSize(500, 400);
         setLocationRelativeTo(null);
         setResizable(false); 
         setVisible(false);      
@@ -60,9 +63,8 @@ public class Bank extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setPreferredSize(new Dimension(450, 450));
-        // mainPanel.setOpaque(false);     
-        Dimension sidePanelDimension = new Dimension(200, 300);      
+        mainPanel.setPreferredSize(new Dimension(450, 300));  
+        Dimension sidePanelDimension = new Dimension(225, 250);      
 
         JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
         JPanel rightPanel = createRightMainPanel(sidePanelDimension);
@@ -87,7 +89,7 @@ public class Bank extends JFrame {
         mainPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        JPanel profilePanel = createProfilePanel();
+        profilePanel = createProfilePanel();
 
         tabbedPane.addTab("Main", mainPanel);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -98,8 +100,23 @@ public class Bank extends JFrame {
     }
 
     private JPanel createProfilePanel() {
-        JPanel profilePanel = new JPanel();
+        JPanel profilePanel = new JPanel(new GridBagLayout());
         profilePanel.setPreferredSize(new Dimension(450, 450));
+        profilePanel.setBackground(Color.ORANGE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        String[] names = new String[] {"Name:", "Email:", "Number:", "Address:", "Username:", "ID:", "Balance:"};
+        gbc.fill = GridBagConstraints.HORIZONTAL;  
+        for (int i = 0; i < names.length; i++) {
+            JLabel newLabel = new JLabel(names[i], JLabel.CENTER);
+            newLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            profilePanel.add(newLabel, gbc);
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            profilePanel.add(new JLabel(), gbc);
+        }     
+
         return profilePanel;
     }
 
@@ -121,10 +138,12 @@ public class Bank extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentAccount.withdraw(Double.parseDouble(withdrawField.getText()))) {
+                    updateProfileBalance(currentAccount.getBalance());
                     JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
                 } else {
                     JOptionPane.showMessageDialog(withdrawField, "Insufficient funds. Withdraw failed");
                 }
+                withdrawField.setText("");
             }
         };
         withdrawField.addActionListener(withdrawAction);
@@ -134,10 +153,13 @@ public class Bank extends JFrame {
            @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentAccount.deposit(Double.parseDouble(depositField.getText()))) {
+                    updateProfileBalance(currentAccount.getBalance());
                     JOptionPane.showMessageDialog(depositField, "Deposit successful!");
+                    
                 } else {
                     JOptionPane.showMessageDialog(depositField, "Invalid funds. Deposit failed.");
-                }                
+                } 
+                depositField.setText("");               
             }
         };
         depositField.addActionListener(depositAction);
@@ -169,13 +191,15 @@ public class Bank extends JFrame {
                     String transfer = JOptionPane.showInputDialog("Enter amount to transfer");
                     double transferAmount = Double.parseDouble(transfer);
                     if (moneyTransfer(currentAccount, recipient, transferAmount)) {
+                        updateProfileBalance(currentAccount.getBalance());
                         JOptionPane.showMessageDialog(transferField, "Transfer successful!");
                     } else {
                         JOptionPane.showMessageDialog(transferField, "Insufficient funds. Transfer failed.");
                     }
                 } else {
                     JOptionPane.showMessageDialog(transferField, "Cannot find user.");
-                }               
+                }
+                transferField.setText("");               
             }
         };
         transferField.addActionListener(transferAction);
@@ -294,7 +318,9 @@ public class Bank extends JFrame {
      */
     private boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
         boolean sufficientFunds = false;
-        if (sender.getBalance() > transferAmount && sender.withdraw(transferAmount)) {
+        if (!sender.equals(recipient) 
+            && sender.getBalance() > transferAmount 
+            && sender.withdraw(transferAmount)) {
             recipient.deposit(transferAmount);
             Transaction transferTransaction = new Transaction("Transfer", 
                                                                 transferAmount, 
@@ -304,6 +330,49 @@ public class Bank extends JFrame {
         }
 
         return sufficientFunds;
+    }
+
+    /**
+     * 
+     * 
+     * @param account
+     */
+    protected void updateProfile(Account account) {
+        String[] accountCreds = new String[] {account.getName(),
+                                            account.getEmail(),
+                                            account.getPhoneNumber(),
+                                            account.getAddress(), 
+                                            account.getUsername(), 
+                                            String.format("%d", 
+                                                        account.getID()),
+                                            String.format("$%,.2f", 
+                                                        account.getBalance())};
+        GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
+        GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
+        gbc.gridx = 1;
+        int index = 1;
+        for (int i = 0; i < accountCreds.length; i++) {
+            gbc.gridy = i;
+            Component label = profilePanel.getComponent(index);
+            profilePanel.remove(label);
+            profilePanel.add(new JLabel(accountCreds[i]), gbc, index);
+            index += 2;
+        }     
+    }
+
+    /**
+     * 
+     * 
+     * @param balance
+     */
+    protected void updateProfileBalance(double balance) {
+        GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
+        GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        Component balanceLabel = profilePanel.getComponent(13);
+        profilePanel.remove(balanceLabel);
+        profilePanel.add(new JLabel(String.format("$%,.2f", balance)), gbc, 13);
     }
 
     protected void setCurrentAccount(Account user) {
