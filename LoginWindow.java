@@ -156,7 +156,7 @@ public class LoginWindow extends JFrame {
                 current.getPassword().compareTo(password) == 0) {
                 found = true;
                 bank.setCurrentAccount(current);
-                bank.updateProfile(current);
+                bank.getBankUtils().updateProfile(current);
             } else {
                 index++;
             }

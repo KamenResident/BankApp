@@ -23,7 +23,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 /**
- * A program that represents a banking program.
+ * An application that represents a banking program.
  */
 public class Bank extends JFrame {
 
@@ -37,9 +37,12 @@ public class Bank extends JFrame {
 
     /**
      * Constructor for the banking program.
+     * 
+     * @param title is the title for the application.
      */
     public Bank(String title) {
         super(title);
+        bankUtils = new BankUtility(this);  
         accounts = new ArrayList<Account>();
         uid = 0; 
         init();
@@ -47,8 +50,7 @@ public class Bank extends JFrame {
         createComponents();
         loginWindow = new LoginWindow(this, "Log In");
         signUpWindow = new SignUpWindow(this, "Sign Up");
-        currentAccount = null;  
-        bankUtils = new BankUtility(this);      
+        currentAccount = null;              
     }
 
     private void init() {
@@ -95,7 +97,7 @@ public class Bank extends JFrame {
         mainPanel.add(rightPanel, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        profilePanel = createProfilePanel();
+        profilePanel = bankUtils.createProfilePanel();
 
         tabbedPane.addTab("Main", mainPanel);
         tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
@@ -103,31 +105,6 @@ public class Bank extends JFrame {
         tabbedPane.setMnemonicAt(1, KeyEvent.VK_1);     
 
         add(tabbedPane);
-    }
-
-    private JPanel createProfilePanel() {
-        // Create the panel for the secondary tab for the user's profile.
-        JPanel profilePanel = new JPanel(new GridBagLayout());
-        profilePanel.setPreferredSize(new Dimension(450, 450));
-        profilePanel.setBackground(Color.ORANGE);
-        GridBagConstraints gbc = new GridBagConstraints();
-        String[] names = new String[] {"Name:", "Email:", "Number:", "Address:", "Username:", "ID:", "Balance:"};
-        gbc.fill = GridBagConstraints.HORIZONTAL;  
-        for (int i = 0; i < names.length; i++) {
-            JLabel newLabel = new JLabel(names[i], JLabel.CENTER);
-            newLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            gbc.gridx = 0;
-            gbc.gridy = i;
-            gbc.weighty = 0.5;
-            newLabel.setForeground(Color.GRAY);
-            profilePanel.add(newLabel, gbc);
-            gbc.gridx = 1;
-            gbc.gridy = i;
-            gbc.weighty = 0.5;
-            profilePanel.add(new JLabel(), gbc);
-        }     
-
-        return profilePanel;
     }
 
     private JPanel createLeftMainPanel(Dimension panelDimension) {
@@ -143,7 +120,7 @@ public class Bank extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentAccount.withdraw(Double.parseDouble(withdrawField.getText()))) {
-                    updateProfileBalance(currentAccount.getBalance());
+                    bankUtils.updateProfileBalance(currentAccount.getBalance());
                     JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
                 } else {
                     JOptionPane.showMessageDialog(withdrawField, "Insufficient funds. Withdraw failed");
@@ -157,7 +134,7 @@ public class Bank extends JFrame {
            @Override
             public void actionPerformed(ActionEvent e) {
                 if (currentAccount.deposit(Double.parseDouble(depositField.getText()))) {
-                    updateProfileBalance(currentAccount.getBalance());
+                    bankUtils.updateProfileBalance(currentAccount.getBalance());
                     JOptionPane.showMessageDialog(depositField, "Deposit successful!");
                     
                 } else {
@@ -206,7 +183,7 @@ public class Bank extends JFrame {
                     String transfer = JOptionPane.showInputDialog("Enter amount to transfer");
                     double transferAmount = Double.parseDouble(transfer);
                     if (bankUtils.moneyTransfer(currentAccount, recipient, transferAmount)) {
-                        updateProfileBalance(currentAccount.getBalance());
+                        bankUtils.updateProfileBalance(currentAccount.getBalance());
                         JOptionPane.showMessageDialog(transferField, "Transfer successful!");
                     } else {
                         JOptionPane.showMessageDialog(transferField, "Insufficient funds. Transfer failed.");
@@ -250,57 +227,17 @@ public class Bank extends JFrame {
         return rightPanel;
     }
 
-
-    /**
-     * Updates the profile depending on at least one credential being changed.
-     * 
-     * @param account is the user's account whose credentials are being updated.
-     */
-    protected void updateProfile(Account account) {
-        String[] accountCreds = new String[] {account.getName(),
-                                            account.getEmail(),
-                                            account.getPhoneNumber(),
-                                            account.getAddress(), 
-                                            account.getUsername(), 
-                                            String.format("%d", 
-                                                        account.getID()),
-                                            String.format("$%,.2f", 
-                                                        account.getBalance())};
-        GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
-        GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
-        gbc.gridx = 1;
-        int index = 1;
-        for (int i = 0; i < accountCreds.length; i++) {
-            gbc.gridy = i;
-            Component label = profilePanel.getComponent(index);
-            profilePanel.remove(label);
-            profilePanel.add(new JLabel(accountCreds[i]), gbc, index);
-            index += 2;
-        }     
-    }
-
-    private void updateProfileBalance(double balance) {
-        // Simply update the account's balance listed in the profile tab.
-        GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
-        GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
-        gbc.gridx = 1;
-        gbc.gridy = 6;
-        Component balanceLabel = profilePanel.getComponent(13);
-        profilePanel.remove(balanceLabel);
-        profilePanel.add(new JLabel(String.format("$%,.2f", balance)), gbc, 13);
-    }
-
     /**
      * Used to add a new bank account to the system.
      * 
-     * @param firstName
-     * @param lastName
-     * @param username
-     * @param password
-     * @param phoneNumber
-     * @param email
-     * @param address
-     * @param type
+     * @param firstName is the new user's first name.
+     * @param lastName is the new user's last name.
+     * @param username is the new user's username.
+     * @param password is the new user's password.
+     * @param phoneNumber is the new user's phone number.
+     * @param email is the new user's email address.
+     * @param address is the new user's physical address.
+     * @param type is the type of account being created (0 for checking, 1 for savings).
      */
     protected void addNewAccount(String firstName, String lastName,
                                     String username, String password,
@@ -335,13 +272,12 @@ public class Bank extends JFrame {
         }
     }
 
-    /**
-     * Generates a unique user ID for a new account.
-     * 
-     * @return a unique user ID
-     */
     protected int getUID() {
         return uid++;
+    }
+
+    protected JPanel getProfilePanel() {
+        return profilePanel;
     }
 
     protected List<Account> getAccounts() {
