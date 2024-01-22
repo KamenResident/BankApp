@@ -42,7 +42,7 @@ For the sign up window, ensure that your password is longer than 6 characters an
   - [x] Implement the withdraw and deposit features.
     - [x] Add different restrictions depending on the account type (checking or savings).
   - [x] Add unique functionality to the checking and savings accounts.
-  - [ ] Add another tab for viewing the current user's profile.
+  - [x] Add another tab for viewing the current user's profile.
 - [ ] Change data type for money to BigDecimal for the entire application.
 - [ ] Create a local database for the application itself.
 

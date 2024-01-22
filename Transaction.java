@@ -43,7 +43,7 @@ public class Transaction {
      */
     @Override
     public String toString() {
-        return String.format("%s : %s : %s", transactionType, 
+        return String.format("%s : $%,.2f : %s", transactionType, 
                                                     transactionAmount, 
                                                     dateOfTransaction);
     }

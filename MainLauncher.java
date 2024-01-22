@@ -24,11 +24,18 @@ public class MainLauncher {
                                                     "Password1!", 
                                                     "1234567890", 
                                                     "jdoe@mail.com", 
-                                                    "CA, Sacramento 98765", 
+                                                    "Sacramento, CA 98765", 
                                                     0);
+                Account testAccount2 = new Account("Mary", 
+                                                    "Lee", 
+                                                    "mlee07", 
+                                                    "Password2!", 
+                                                    "5557778888", 
+                                                    "mlee@mail.com", 
+                                                    "Harlem, NY 98567", 
+                                                    1);
                 bank.addNewAccount(testAccount);
-
-                System.out.println(String.format("%s is now running", bank.getTitle()));
+                bank.addNewAccount(testAccount2);
             }
         });
     }

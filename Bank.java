@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,7 +15,6 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -60,11 +60,14 @@ public class Bank extends JFrame {
     }
 
     private void createComponents() {
+        // Create the tabbed pane for the application.
         JTabbedPane tabbedPane = new JTabbedPane();
 
+        // Main panel for housing the inner panels and components.
         JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setPreferredSize(new Dimension(450, 300));  
-        Dimension sidePanelDimension = new Dimension(225, 250);      
+        mainPanel.setPreferredSize(new Dimension(450, 300));
+        mainPanel.setBackground(Color.BLACK);  
+        Dimension sidePanelDimension = new Dimension(250, 250);      
 
         JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
         JPanel rightPanel = createRightMainPanel(sidePanelDimension);
@@ -111,9 +114,12 @@ public class Bank extends JFrame {
             newLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             gbc.gridx = 0;
             gbc.gridy = i;
+            gbc.weighty = 0.5;
+            newLabel.setForeground(Color.GRAY);
             profilePanel.add(newLabel, gbc);
             gbc.gridx = 1;
             gbc.gridy = i;
+            gbc.weighty = 0.5;
             profilePanel.add(new JLabel(), gbc);
         }     
 
@@ -121,19 +127,13 @@ public class Bank extends JFrame {
     }
 
     private JPanel createLeftMainPanel(Dimension panelDimension) {
-        JPanel leftPanel = new JPanel();
-        BoxLayout leftLayout = new BoxLayout(leftPanel, BoxLayout.PAGE_AXIS);
-        leftPanel.setLayout(leftLayout);
+        JPanel leftPanel = new JPanel(new GridBagLayout());
         leftPanel.setPreferredSize(panelDimension);
         leftPanel.setBackground(Color.YELLOW);
 
-        Dimension compSize = new Dimension(300, 30);
         JLabel withdrawLabel = new JLabel("Withdraw");
-        withdrawLabel.setPreferredSize(compSize);
         JLabel depositLabel = new JLabel("Deposit");
-        depositLabel.setPreferredSize(compSize);
         JTextField withdrawField = new JTextField();
-        withdrawField.setMaximumSize(compSize);
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,7 +148,6 @@ public class Bank extends JFrame {
         };
         withdrawField.addActionListener(withdrawAction);
         JTextField depositField = new JTextField();
-        depositField.setMaximumSize(compSize);
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
@@ -164,18 +163,28 @@ public class Bank extends JFrame {
         };
         depositField.addActionListener(depositAction);
 
-        leftPanel.add(withdrawLabel);
-        leftPanel.add(withdrawField);
-        leftPanel.add(depositLabel);
-        leftPanel.add(depositField);
+        List<Component> comps = new ArrayList<Component>();
+        comps.add(withdrawLabel);
+        comps.add(withdrawField);
+        comps.add(depositLabel);
+        comps.add(depositField);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(1, 1, 1, 1);
+        Dimension compSize = new Dimension(300, 30);
+        for (int i = 0; i < comps.size(); i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            comps.get(i).setPreferredSize(compSize);
+            leftPanel.add(comps.get(i), gbc);
+        }
 
         return leftPanel;
     }
 
     private JPanel createRightMainPanel(Dimension panelDimension) {
-        JPanel rightPanel = new JPanel();
-        BoxLayout rightLayout = new BoxLayout(rightPanel, BoxLayout.PAGE_AXIS);
-        rightPanel.setLayout(rightLayout);
+        JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setPreferredSize(panelDimension);
         rightPanel.setBackground(Color.GREEN);
 
@@ -216,11 +225,21 @@ public class Bank extends JFrame {
                 JOptionPane.showMessageDialog(statementButton, currentAccount.getTransactionHistory());
             }
         });
-       
-        rightPanel.add(transferLabel);
-        rightPanel.add(transferField);
-        rightPanel.add(statementLabel);
-        rightPanel.add(statementButton);
+
+        List<Component> comps = new ArrayList<Component>();
+        comps.add(transferLabel);
+        comps.add(transferField);
+        comps.add(statementLabel);
+        comps.add(statementButton);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL; 
+        gbc.insets = new Insets(1, 1, 1, 1);
+        for (int i = 0; i < comps.size(); i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            rightPanel.add(comps.get(i), gbc);
+        }
 
         return rightPanel;
     }
@@ -365,7 +384,7 @@ public class Bank extends JFrame {
      * 
      * @param balance
      */
-    protected void updateProfileBalance(double balance) {
+    private void updateProfileBalance(double balance) {
         GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
         GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
         gbc.gridx = 1;
