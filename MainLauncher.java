@@ -18,24 +18,22 @@ public class MainLauncher {
                 // A test account that can be used to demonstrate some of 
                 // the application's functionalities.
                 
-                Account testAccount = new Account("John", 
-                                                    "Doe", 
-                                                    "jdoe05", 
-                                                    "Password1!", 
-                                                    "1234567890", 
-                                                    "jdoe@mail.com", 
-                                                    "Sacramento, CA 98765", 
-                                                    0);
-                Account testAccount2 = new Account("Mary", 
-                                                    "Lee", 
-                                                    "mlee07", 
-                                                    "Password2!", 
-                                                    "5557778888", 
-                                                    "mlee@mail.com", 
-                                                    "Harlem, NY 98567", 
-                                                    1);
-                bank.addNewAccount(testAccount);
-                bank.addNewAccount(testAccount2);
+                bank.addNewAccount("John", 
+                                    "Doe", 
+                                    "jdoe05", 
+                                    "Password1!", 
+                                    "1234567890", 
+                                        "jdoe@mail.com", 
+                                        "Sacramento, CA 98765", 
+                                                0);
+                bank.addNewAccount("Mary", 
+                                    "Lee", 
+                                    "mlee07", 
+                                    "Password2!", 
+                                    "5557778888", 
+                                        "mlee@mail.com", 
+                                        "Harlem, NY 98567", 
+                                                1);
             }
         });
     }

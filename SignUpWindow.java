@@ -134,8 +134,8 @@ public class SignUpWindow extends JFrame {
         boolean[] validCredentials = new boolean[9];
         validCredentials[0] = fields[0].getText().length() > 1;
         validCredentials[1] = fields[1].getText().length() > 1;        
-        validCredentials[2] = !bank.checkUsername(fields[2].getText());
-        validCredentials[3] = bank.checkPassword(fields[3].getText());
+        validCredentials[2] = bank.getBankUtils().findAccount(fields[2].getText()) == null;
+        validCredentials[3] = bank.getBankUtils().checkPassword(fields[3].getText());
         validCredentials[4] = fields[4].getText().length() == 10;
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+ 
                             "[a-zA-Z0-9_+&*-]+)*@" + 
@@ -162,35 +162,37 @@ public class SignUpWindow extends JFrame {
             }
         }
    
-        String address = String.format("%s, %s %s", fields[6].getText(), 
-                                                            fields[7].getText(), 
+        String address = String.format("%s, %s %s", fields[7].getText(), 
+                                                            fields[6].getText(), 
                                                             fields[8].getText());
         if (signedUp) {
-            Account newAccount;
             if (choice == 0) {
-                newAccount = new Account(fields[0].getText(),
+                bank.addNewAccount(fields[0].getText(),
                                             fields[1].getText(),
                                             fields[2].getText(), 
                                             fields[3].getText(), 
                                             fields[4].getText(), 
                                             fields[5].getText(), 
                                             address, 
-                                            bank.getUID());
+                                            0);
             } else {
-                newAccount = new SavingsAccount(fields[0].getText(),
+                bank.addNewAccount(fields[0].getText(),
                                             fields[1].getText(),
                                             fields[2].getText(), 
                                             fields[3].getText(), 
                                             fields[4].getText(), 
                                             fields[5].getText(), 
                                             address, 
-                                            bank.getUID());
+                                            1);
             }
-            bank.addNewAccount(newAccount);
             JOptionPane.showMessageDialog(button, "New account created!");
+            for (int i = 0; i < fields.length; i++) {
+                fields[i].setText("");
+            }
             setVisible(false);
             bank.manageWindows(1);
         }
+
         return signedIn;
     }
 

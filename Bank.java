@@ -9,7 +9,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +33,7 @@ public class Bank extends JFrame {
     private LoginWindow loginWindow;
     private SignUpWindow signUpWindow;
     private JPanel profilePanel;
+    private BankUtility bankUtils;
 
     /**
      * Constructor for the banking program.
@@ -47,7 +47,8 @@ public class Bank extends JFrame {
         createComponents();
         loginWindow = new LoginWindow(this, "Log In");
         signUpWindow = new SignUpWindow(this, "Sign Up");
-        currentAccount = null;        
+        currentAccount = null;  
+        bankUtils = new BankUtility(this);      
     }
 
     private void init() {
@@ -69,6 +70,8 @@ public class Bank extends JFrame {
         mainPanel.setBackground(Color.BLACK);  
         Dimension sidePanelDimension = new Dimension(250, 250);      
 
+        // Create the left, right, and bottom panels.
+        // Bottom panel will simply house the logout button.
         JPanel leftPanel = createLeftMainPanel(sidePanelDimension);
         JPanel rightPanel = createRightMainPanel(sidePanelDimension);
 
@@ -103,6 +106,7 @@ public class Bank extends JFrame {
     }
 
     private JPanel createProfilePanel() {
+        // Create the panel for the secondary tab for the user's profile.
         JPanel profilePanel = new JPanel(new GridBagLayout());
         profilePanel.setPreferredSize(new Dimension(450, 450));
         profilePanel.setBackground(Color.ORANGE);
@@ -127,6 +131,7 @@ public class Bank extends JFrame {
     }
 
     private JPanel createLeftMainPanel(Dimension panelDimension) {
+        // Create the left panel and its components.
         JPanel leftPanel = new JPanel(new GridBagLayout());
         leftPanel.setPreferredSize(panelDimension);
         leftPanel.setBackground(Color.YELLOW);
@@ -184,6 +189,7 @@ public class Bank extends JFrame {
     }
 
     private JPanel createRightMainPanel(Dimension panelDimension) {
+        // Create the right panel and its components.
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setPreferredSize(panelDimension);
         rightPanel.setBackground(Color.GREEN);
@@ -195,11 +201,11 @@ public class Bank extends JFrame {
         Action transferAction = new AbstractAction () {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Account recipient = findAccount(transferField.getText());
+                Account recipient = bankUtils.findAccount(transferField.getText());
                 if (recipient != null) {
                     String transfer = JOptionPane.showInputDialog("Enter amount to transfer");
                     double transferAmount = Double.parseDouble(transfer);
-                    if (moneyTransfer(currentAccount, recipient, transferAmount)) {
+                    if (bankUtils.moneyTransfer(currentAccount, recipient, transferAmount)) {
                         updateProfileBalance(currentAccount.getBalance());
                         JOptionPane.showMessageDialog(transferField, "Transfer successful!");
                     } else {
@@ -244,117 +250,11 @@ public class Bank extends JFrame {
         return rightPanel;
     }
 
-    /**
-     * Checks any users with the username being searched and ensures
-     * the username meets the required length.
-     * Also serves as a way to prevent new users using a username that
-     * has already been used.
-     * 
-     * @param username is the username being searched.
-     * @return true if there exists a user with the username, false otherwise.
-     */
-    protected boolean checkUsername(String username) {
-        boolean found = false;
-        int i = 0;
-        if (!accounts.isEmpty() && username.length() > 5) {
-            while (!found && i < accounts.size()) {
-                if (accounts.get(i).getUsername().compareTo(username) == 0) {
-                    found = true;
-                } else {
-                    i++;
-                }
-            }
-        }
-        return found;
-
-    }
-
-    private Account findAccount(String username) {
-        Account searchedAccount = null;
-        boolean found = false;
-        int i = 0;
-        if (!accounts.isEmpty() && username.length() > 5) {
-            while (!found && i < accounts.size()) {
-                if (accounts.get(i).getUsername().compareTo(username) == 0) {
-                    found = true;
-                    searchedAccount = accounts.get(i);
-                } else {
-                    i++;
-                }
-            }
-        }
-        return searchedAccount;
-    }
 
     /**
-     * Checks to ensure the password meets the requirements.
-     * The password must have more than 6 characters and at least
-     * one of the following: a digit, special character, uppercase letter,
-     *                       and a lowercase letter.
+     * Updates the profile depending on at least one credential being changed.
      * 
-     * @param password is the password the user intends to use for their account.
-     * @return true if the password meets all the requirements, false otherwise.
-     */
-    protected boolean checkPassword(String password) {
-        boolean validLength = password.length() > 6;
-        boolean numbers = false;
-        boolean specialChars = false;
-        boolean upperCase = false;
-        boolean lowerCase = false;
-        char currentChar;
-        if (validLength) {
-            for (int i = 0; i < password.length(); i++) {
-                currentChar = password.charAt(i);
-
-                if (Character.isDigit(currentChar)) {
-                    numbers = true;
-                }
-                if (Character.isUpperCase(currentChar)) {
-                    upperCase = true;
-                }
-                if (Character.isLowerCase(currentChar)) {
-                    lowerCase = true;
-                }
-                if(!Character.isDigit(currentChar)
-                    && !Character.isLetter(currentChar)
-                    && !Character.isWhitespace(currentChar)) {
-                    specialChars = true;
-                }
-            }
-        }
-        boolean ready = validLength && numbers && specialChars && upperCase && lowerCase;
-
-        return ready;
-    }
-
-    /**
-     * Used to help transfer money between two accounts.
-     * 
-     * @param sender is the account sending the money.
-     * @param recipient is the account receiving the money.
-     * @param transferAmount is the amount of money being transferred.
-     * @return true if the transfer is successful, false otherwise.
-     */
-    private boolean moneyTransfer(Account sender, Account recipient, double transferAmount) {
-        boolean sufficientFunds = false;
-        if (!sender.equals(recipient) 
-            && sender.getBalance() > transferAmount 
-            && sender.withdraw(transferAmount)) {
-            recipient.deposit(transferAmount);
-            Transaction transferTransaction = new Transaction("Transfer", 
-                                                                transferAmount, 
-                                                                LocalDateTime.now());
-            currentAccount.addTransaction(transferTransaction);
-            sufficientFunds = true;
-        }
-
-        return sufficientFunds;
-    }
-
-    /**
-     * 
-     * 
-     * @param account
+     * @param account is the user's account whose credentials are being updated.
      */
     protected void updateProfile(Account account) {
         String[] accountCreds = new String[] {account.getName(),
@@ -379,12 +279,8 @@ public class Bank extends JFrame {
         }     
     }
 
-    /**
-     * 
-     * 
-     * @param balance
-     */
     private void updateProfileBalance(double balance) {
+        // Simply update the account's balance listed in the profile tab.
         GridBagLayout profileLayout = (GridBagLayout) profilePanel.getLayout();
         GridBagConstraints gbc = profileLayout.getConstraints(profilePanel);
         gbc.gridx = 1;
@@ -394,12 +290,49 @@ public class Bank extends JFrame {
         profilePanel.add(new JLabel(String.format("$%,.2f", balance)), gbc, 13);
     }
 
-    protected void setCurrentAccount(Account user) {
-        currentAccount = user;
+    /**
+     * Used to add a new bank account to the system.
+     * 
+     * @param firstName
+     * @param lastName
+     * @param username
+     * @param password
+     * @param phoneNumber
+     * @param email
+     * @param address
+     * @param type
+     */
+    protected void addNewAccount(String firstName, String lastName,
+                                    String username, String password,
+                                    String phoneNumber, String email,
+                                    String address, int type) {
+        Account newAccount;
+        if (type == 0) {
+            newAccount = new Account(firstName, lastName,
+                                        username, password, 
+                                        phoneNumber, email,
+                                        address, getUID());   
+        } else {
+            newAccount = new SavingsAccount(firstName, lastName,
+                                            username, password, 
+                                            phoneNumber, email,
+                                            address, getUID());
+        }
+        
+        accounts.add(newAccount);
     }
 
-    protected void addNewAccount(Account newAccount) {
-        accounts.add(newAccount);
+    /**
+     * Used to toggle the visibility of both the login and signup windows.
+     * 
+     * @param choice is a flag for toggling the visilibity of either the login or signup window.
+     */
+    protected void manageWindows(int choice) {
+        if (choice == 0) {
+            signUpWindow.setVisible(true);
+        } else {
+            loginWindow.setVisible(true);
+        }
     }
 
     /**
@@ -419,17 +352,12 @@ public class Bank extends JFrame {
         return currentAccount;
     }
 
-    /**
-     * Used to toggle the visibility of both the login and signup windows.
-     * 
-     * @param choice is a flag for toggling the visilibity of either the login or signup window.
-     */
-    protected void manageWindows(int choice) {
-        if (choice == 0) {
-            signUpWindow.setVisible(true);
-        } else {
-            loginWindow.setVisible(true);
-        }
+    protected void setCurrentAccount(Account user) {
+        currentAccount = user;
+    }
+
+    protected BankUtility getBankUtils() {
+        return bankUtils;
     }
 
 }
