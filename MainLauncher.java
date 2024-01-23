@@ -15,7 +15,7 @@ public class MainLauncher {
             @Override
             public void run() {
                 Bank bank = new Bank("BankApp");
-                // A test account that can be used to demonstrate some of 
+                // Two test accounts that can be used to demonstrate some of 
                 // the application's functionalities.
                 
                 bank.addNewAccount("John", 
@@ -34,6 +34,7 @@ public class MainLauncher {
                                         "mlee@mail.com", 
                                         "Harlem, NY 98567", 
                                                 1);
+                bank.getBankUtils().findAccount("mlee07").setBalance(1000);
             }
         });
     }

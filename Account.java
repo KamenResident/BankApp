@@ -1,6 +1,5 @@
 import java.util.Date;
 import java.util.List;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
@@ -164,6 +163,10 @@ public class Account {
         return transactionCount;
     }
 
+    public void updateTransactionCount() {
+        transactionCount++;
+    }
+
     public Date getDateOfCreation() {
         return dateOfCreation;
     }
@@ -194,11 +197,6 @@ public class Account {
         if (depositAmount > 0) {
             depositSuccess = true;           
             this.balance += depositAmount;
-            Transaction depositTransaction = new Transaction("Deposit", 
-                                                            depositAmount, 
-                                                            LocalDateTime.now());
-            transactions.add(depositTransaction);
-            transactionCount++;
             if (this.balance > overdraftLimit) {
                 exceedLimit = false;
             }
@@ -221,11 +219,6 @@ public class Account {
         if (withdrawalAmount > 0 && !exceedLimit) {
             this.balance -= withdrawalAmount;
             sufficientFunds = true;
-            Transaction withdrawTransaction = new Transaction("Withdraw", 
-                                                                withdrawalAmount,
-                                                                LocalDateTime.now());
-            transactions.add(withdrawTransaction);
-            transactionCount++;
         }
         
         if (difference <= overdraftLimit) {

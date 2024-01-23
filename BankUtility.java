@@ -84,7 +84,9 @@ public class BankUtility {
                                                                 transferAmount, 
                                                                 LocalDateTime.now());
             sender.addTransaction(transferTransaction);
-            recipient.addTransaction(transferTransaction);
+            sender.updateTransactionCount();
+            recipient.addTransaction(transferTransaction);           
+            recipient.updateTransactionCount();
             sufficientFunds = true;
         }
 

@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -119,8 +120,14 @@ public class Bank extends JFrame {
         Action withdrawAction = new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (currentAccount.withdraw(Double.parseDouble(withdrawField.getText()))) {
+                double withdrawalAmount = Double.parseDouble(withdrawField.getText());
+                if (currentAccount.withdraw(withdrawalAmount)) {
                     bankUtils.updateProfileBalance(currentAccount.getBalance());
+                    Transaction withdrawTransaction = new Transaction("Withdraw", 
+                                                                withdrawalAmount,
+                                                                LocalDateTime.now());
+                    currentAccount.addTransaction(withdrawTransaction);
+                    currentAccount.updateTransactionCount();
                     JOptionPane.showMessageDialog(withdrawField, "Withdraw successful!");
                 } else {
                     JOptionPane.showMessageDialog(withdrawField, "Insufficient funds. Withdraw failed");
@@ -133,10 +140,15 @@ public class Bank extends JFrame {
         Action depositAction = new AbstractAction() {
            @Override
             public void actionPerformed(ActionEvent e) {
-                if (currentAccount.deposit(Double.parseDouble(depositField.getText()))) {
+                double depositAmount = Double.parseDouble(depositField.getText());
+                if (currentAccount.deposit(depositAmount)) {
                     bankUtils.updateProfileBalance(currentAccount.getBalance());
-                    JOptionPane.showMessageDialog(depositField, "Deposit successful!");
-                    
+                    Transaction depositTransaction = new Transaction("Deposit", 
+                                                            depositAmount, 
+                                                            LocalDateTime.now());
+                    currentAccount.addTransaction(depositTransaction);
+                    currentAccount.updateTransactionCount();
+                    JOptionPane.showMessageDialog(depositField, "Deposit successful!");                    
                 } else {
                     JOptionPane.showMessageDialog(depositField, "Invalid funds. Deposit failed.");
                 } 
